@@ -20,10 +20,14 @@ do
       do
          if [ -d $plugin_folder/$version ]; then
             cd $plugin_folder/$version
-            zip -r ${plugin_folder}-${version}.zip * >/dev/null 2>&1
-            mv ${plugin_folder}-${version}.zip ../../target/
+            zip_name="${plugin_folder}-${version}.zip"
+            if [ "x$LATIPAY_API" != "x" ]; then
+               zip_name="${plugin_folder}-${version}-staging.zip"
+            fi
+            zip -r $zip_name * >/dev/null 2>&1
+            mv $zip_name ../../target/
             cd $ROOT_FOLDER
-            echo "target/${plugin_folder}-${version}.zip"
+            echo "target/$zip_name"
          fi
       done
    fi
