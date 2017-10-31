@@ -4,11 +4,11 @@ LATIPAY_API=$1
 if [ "x$LATIPAY_API" = "x" ]; then
    echo "Package Plugin Connect Latipay 2.0 Production Environment"
    echo "Replace All api-staging.latipay.net To api.latipay.net"
-   sed -i "" "s/api-staging.latipay.net/api.latipay.net/g" `grep "api-staging.latipay.net" -rl $ROOT_FOLDER | grep -Ev "$SED_IGNORE_FILES"`
+   sed -i "s/api-staging.latipay.net/api.latipay.net/g" `grep "api-staging.latipay.net" -rl $ROOT_FOLDER | grep -Ev "$SED_IGNORE_FILES"`
 else
    echo "Package Plugin Connect Latipay 2.0 Test Environment"
    echo "Replace All api.latipay.net To api-staging.latipay.net"
-   sed -i "" "s/api.latipay.net/api-staging.latipay.net/g" `grep "api.latipay.net" -rl $ROOT_FOLDER | grep -Ev "$SED_IGNORE_FILES"`
+   sed -i "s/api.latipay.net/api-staging.latipay.net/g" `grep "api.latipay.net" -rl $ROOT_FOLDER | grep -Ev "$SED_IGNORE_FILES"`
 fi
 
 rm -rf target
