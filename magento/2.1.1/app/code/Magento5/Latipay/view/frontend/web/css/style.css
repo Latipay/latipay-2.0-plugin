@@ -1,0 +1,19 @@
+.payment-method-title .label .latipay-title:after {
+    content: "";
+    width: 72px;
+    height: 41px;
+    background: url(../images/logo.png) no-repeat;
+    display: inline-block;
+}
+.payment-method-content #latipay-icon{
+    width: 223px;
+    height: 47px;
+}
+.payment-method-content #latipay-icon:before {
+    content: "";
+    width: 223px;
+    height: 47px;
+    background: url(../images/icon.png) no-repeat;
+    display: inline-block;
+}
+.payment-currency-CNY .latipay-options-item-bank {display: none;}

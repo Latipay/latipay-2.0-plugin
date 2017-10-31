@@ -1,0 +1,3 @@
+返回GET值 : |GET|Array
+|merchant_reference:46|payment_method:alipay|status:paid|currency:NZD|amount:0.01|signature:95a4ce2097c8747bc90334e605a4a80cff09043d38e1358abc38a3bc2ac3d9a8返回GET值 : |GET|Array
+|merchant_reference:53|currency:NZD|amount:0.01|status:paid|payment_method:wechat|signature:e35d250d765f721b27f931c8378395cad0b856b4a235eb5f9e9186d8f8f49567

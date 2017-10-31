@@ -1,0 +1,26 @@
+<div class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
+    <div class="latipay-payment">
+        <span class="latipay-payment__info"><?php echo $this->__('You will be redirected to Latipay after order confirmation.'); ?></span>
+        <br/>
+        <span class="latipay-payment__info"><?php echo $this->__('Latipay offers the above options to make a secure payment.'); ?></span>
+        <ul class="latipay-options">
+            <li class="latipay-options-item">
+                <input name="payment[latipay_method]" id="latipay-method-wechat" type="radio" value="wechat" checked="checked">
+                <label for="latipay-method-wechat">Wechat</label>
+            </li>
+            <li class="latipay-options-item">
+                <input name="payment[latipay_method]" id="latipay-method-alipay" type="radio" value="alipay">
+                <label for="latipay-method-alipay">Alipay</label>
+            </li>
+            <?php if(Mage::app()->getStore()->getCurrentCurrencyCode() != 'CNY'):?>
+            <li class="latipay-options-item">
+                <input name="payment[latipay_method]" id="latipay-method-bank" type="radio" value="onlineBank">
+                <label for="latipay-method-bank">Online Bank</label>
+            </li>
+            <?php endif;?>
+        </ul>
+    </div>
+</div>
+<div>
+    <?php echo $this->getMethod()->getConfigData('message');?>
+</div>

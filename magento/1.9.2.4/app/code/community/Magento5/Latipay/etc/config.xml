@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Magento5_Latipay>
+            <version>1.0.0</version>
+        </Magento5_Latipay>
+    </modules>
+
+    <global>
+        <fieldsets>
+            <sales_convert_quote_payment>
+                <latipay_method>
+                    <to_order_payment>*</to_order_payment>
+                </latipay_method>
+            </sales_convert_quote_payment>
+        </fieldsets>
+        <helpers>
+            <latipay>
+                <class>Magento5_Latipay_Helper</class>
+            </latipay>
+        </helpers>
+
+        <blocks>
+            <latipay>
+                <class>Magento5_Latipay_Block</class>
+            </latipay>
+        </blocks>
+
+        <models>
+            <latipay>
+                <class>Magento5_Latipay_Model</class>
+            </latipay>
+        </models>
+
+        <resources>
+            <latipay_setup>
+                <setup>
+                    <module>Magento5_Latipay</module>
+                </setup>
+            </latipay_setup>
+        </resources>
+    </global>
+
+    <default>
+        <payment>
+            <latipay>
+                <active>1</active>
+                <title>Latipay</title>
+                <transaction_url><![CDATA[https://api.latipay.net/v2/transaction]]></transaction_url>
+                <model>latipay/paymentmethod</model>
+                <wallet_id>W00000001</wallet_id>
+                <user_id>U00001534</user_id>
+                <api_key>12345678</api_key>
+                <order_status>pending</order_status>
+                <allowspecific>0</allowspecific>
+                <payment_action>sale</payment_action>
+                <about_url><![CDATA[http://www.latipay.nz/#your-chinese-payment-gateway-between-new-zealand-and-china]]></about_url>
+            </latipay>
+        </payment>
+    </default>
+
+    <frontend>
+        <layout>
+            <updates>
+                <latipay>
+                    <file>magento5/latipay.xml</file>
+                </latipay>
+            </updates>
+        </layout>
+        <routers>
+            <latipay>
+                <use>standard</use>
+                <args>
+                    <module>Magento5_Latipay</module>
+                    <frontName>latipay</frontName>
+                </args>
+            </latipay>
+        </routers>
+    </frontend>
+</config>

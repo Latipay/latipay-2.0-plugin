@@ -1,0 +1,21 @@
+.latipay-options__item {
+    display: inline-block;
+    margin: 8px 5px 8px 5px !important;
+}
+
+.latipay-options__item img {
+
+}
+
+.latipay-payment {
+    width: auto;
+}
+
+.latipay-payment__logo {
+    margin: 5px auto;
+    width: 50px;
+}
+
+.latipay-payment__info {
+    font-size: 10px;
+}

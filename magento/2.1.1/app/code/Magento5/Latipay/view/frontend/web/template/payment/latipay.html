@@ -1,0 +1,77 @@
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <span class="latipay-title" data-bind="text: getTitle()"></span>
+            <div class="field-tooltip toggle">
+                <div class="field-tooltip-action action-help tooltip-latipay"
+                      tabindex="0" data-toggle="dropdown"
+                      data-bind="mageInit: {'dropdown':{'activeClass': '_active'}}"
+                      aria-haspopup="true" aria-expanded="false"></div>
+                <div class="field-tooltip-content" data-target="dropdown" aria-hidden="true">
+                    <div class="payment-tooltip" data-bind="html: getTooltip()"></div>
+                </div>
+            </div>
+        </label>
+    </div>
+
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="latipay-icon"></div>
+        <p data-bind="html: getInstructions()"></p>
+        <div id="latipay-icon">&nbsp;</div>
+        <form id="latipay-form" data-role="latipay-form"  data-bind='attr: {class: "form form-latipay payment-currency-" + getCurrencyCode()}'>
+            <fieldset class="fieldset payment method" data-bind='attr: {id: "payment_form_" + getCode()}'>
+                <div class="field field-number required">
+                    <label for="latipay_method" class="label">
+                        <span><!-- ko i18n: 'Method'--><!-- /ko --></span>
+                    </label>
+                    <div class="control">
+                        <ul class="latipay-options">
+                            <li class="latipay-options-item-wechat">
+                                <input name="payment[latipay_method]" id="latipay-method-wechat" type="radio" value="wechat" checked="checked">
+                                <label for="latipay-method-wechat">Wechat</label>
+                            </li>
+                            <li class="latipay-options-item-alipay">
+                                <input name="payment[latipay_method]" id="latipay-method-alipay" type="radio" value="alipay">
+                                <label for="latipay-method-alipay">Alipay</label>
+                            </li>
+                            <li class="latipay-options-item-bank">
+                                <input name="payment[latipay_method]" id="latipay-method-bank" type="radio" value="onlineBank">
+                                <label for="latipay-method-bank">Online Bank</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="
+                        click: placeOrder,
+                        enable: (getCode() == isChecked())
+                        "
+                        disabled>
+                    <span data-bind="i18n: 'Continue Checkout'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
