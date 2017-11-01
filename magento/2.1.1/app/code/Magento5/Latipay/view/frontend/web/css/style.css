@@ -1,6 +1,3 @@
-.payment-method-title .label .latipay-title {
-    
-}
 .payment-method-title .label .latipay-title:after {
     content: "";
     width: 72px;
@@ -8,6 +5,7 @@
     background: url(../images/logo.svg) no-repeat;
     display: table-cell;
     vertical-align: middle;
+    background-position: 10px 0;
 }
 .payment-method-content #latipay-icon{
     width: 223px;
@@ -21,3 +19,7 @@
     display: inline-block;
 }
 .payment-currency-CNY .latipay-options-item-bank {display: none;}
+
+.latipay-options li {
+    list-style: none;
+}
