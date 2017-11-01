@@ -18,3 +18,7 @@
     background: url(../images/icon.png) no-repeat;
     display: inline-block;
 }
+
+li.latipay-options-item {
+    list-style: none;
+}
