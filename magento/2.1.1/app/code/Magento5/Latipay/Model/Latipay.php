@@ -184,15 +184,6 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         return $this->getConfigData('sandbox_url');
     }
 
-    public function getWalletUrl()
-    {
-        $env = $this->getConfigData('environment');
-        if ($env === 'production') {
-            return $this->getConfigData('wallet_url');
-        }
-        return $this->getConfigData('staging_wallet_url');
-    }
-
 
     public function getRequestUrl()
     {
@@ -219,12 +210,6 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         $transactionUrl = $this->getTransactionUrl();
         $orderData = json_encode($this->getOrderData());
         return $this->helper->callApi($transactionUrl,$orderData);
-    }
-
-    public function getWalletData($walletId, $userId)
-    {
-        $url = $this->getWalletUrl();
-        return $this->helper->callGetApi($url . '/' . $walletId . '?' . 'user_id');
     }
 
     public function getOrderData()

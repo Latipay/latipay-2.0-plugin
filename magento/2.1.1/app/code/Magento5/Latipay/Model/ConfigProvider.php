@@ -5,18 +5,9 @@ use Magento\Framework\Escaper;
 class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
 {
     protected $methodCode = \Magento5\Latipay\Model\Latipay::PAYMENT_LATIPAY_CODE;
-
-    /**
-     * @var \Magento\Payment\Model\MethodInterface
-     */
+    
+    
     protected $method;
-
-    /**
-     * Store manager
-     *
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $_storeManager;
 
     /**
      * @var Escaper
@@ -26,12 +17,10 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
 
     public function __construct(
         \Magento\Payment\Helper\Data $paymenthelper,
-        Escaper $escaper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        Escaper $escaper
     ){
         $this->method = $paymenthelper->getMethodInstance($this->methodCode);
         $this->escaper = $escaper;
-        $this->_storeManager = $storeManager;
 
     }
 
@@ -39,7 +28,6 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
         $config = [];
         if ($this->method->isAvailable()) {
             $config['payment'][$this->methodCode]['instructions'] = $this->getInstructions();
-            $config['payment'][$this->methodCode]['currency'] = $this->getCurrencyCode();
             $config['payment'][$this->methodCode]['tooltip'] = $this->getTooltip();
             $config['payment'][$this->methodCode]['redirectUrl'] = $this->method->getRedirectUrl();
         }
@@ -65,16 +53,5 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
     protected function getTooltip()
     {
         return nl2br($this->escaper->escapeHtml($this->method->getTooltip(), ['ul', 'li', 'p', 'b', 'strong']));
-    }
-
-    /**
-     * Get tooltip text from config
-     *
-     * @return string
-     */
-    protected function getCurrencyCode()
-    {
-
-        return $this->_storeManager->getStore()->getCurrentCurrency()->getCode();
     }
 }

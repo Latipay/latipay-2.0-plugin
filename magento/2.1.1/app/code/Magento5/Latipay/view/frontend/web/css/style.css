@@ -18,8 +18,3 @@
     background: url(../images/icon.png) no-repeat;
     display: inline-block;
 }
-.payment-currency-CNY .latipay-options-item-bank {display: none;}
-
-.latipay-options li {
-    list-style: none;
-}

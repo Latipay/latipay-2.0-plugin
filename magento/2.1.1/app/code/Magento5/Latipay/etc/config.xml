@@ -8,7 +8,7 @@
                 <title>Latipay</title>
                 <service_provider>latipay_paisa</service_provider>
                 <production_url>https://api.latipay.net/v2/transaction</production_url>
-                <sandbox_url>https://api-staging.latipay.net/v2/transaction</sandbox_url>
+                <sandbox_url>https://api.latipay.net/v2/transaction</sandbox_url>
                 <environment>sandbox</environment>
                 <redirect_url>latipay/standard/redirect</redirect_url>
                 <return_url>latipay/standard/response</return_url>
@@ -17,9 +17,6 @@
                 <wallet_id backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <user_id backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
-
-                <wallet_url>https://api.latipay.net/v2/detail</wallet_url>
-                <staging_wallet_url>https://api-staging.latipay.net/v2/detail</staging_wallet_url>
             </latipay>
         </payment>
     </default>

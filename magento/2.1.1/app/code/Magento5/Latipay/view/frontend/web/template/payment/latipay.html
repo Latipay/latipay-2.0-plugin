@@ -27,10 +27,10 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
-        <div class="latipay-icon"></div>
+        <!-- <div class="latipay-icon"></div> -->
         <p data-bind="html: getInstructions()"></p>
         <!-- <div id="latipay-icon">&nbsp;</div> -->
-        <form id="latipay-form" data-role="latipay-form"  data-bind='attr: {class: "form form-latipay payment-currency-" + getCurrencyCode()}'>
+        <form id="latipay-form" class="form form-latipay" data-role="latipay-form">
             <fieldset class="fieldset payment method" data-bind='attr: {id: "payment_form_" + getCode()}'>
                 <div class="field field-number required">
                     <label for="latipay_method" class="label">
@@ -38,15 +38,15 @@
                     </label>
                     <div class="control">
                         <ul class="latipay-options">
-                            <li class="latipay-options-item-wechat">
+                            <li class="latipay-options-item">
                                 <input name="payment[latipay_method]" id="latipay-method-wechat" type="radio" value="wechat" checked="checked">
                                 <label for="latipay-method-wechat">Wechat</label>
                             </li>
-                            <li class="latipay-options-item-alipay">
+                            <li class="latipay-options-item">
                                 <input name="payment[latipay_method]" id="latipay-method-alipay" type="radio" value="alipay">
                                 <label for="latipay-method-alipay">Alipay</label>
                             </li>
-                            <!-- <li class="latipay-options-item-bank">
+                            <!-- <li class="latipay-options-item">
                                 <input name="payment[latipay_method]" id="latipay-method-bank" type="radio" value="onlineBank">
                                 <label for="latipay-method-bank">Online Bank</label>
                             </li> -->
