@@ -17,6 +17,9 @@
                 <wallet_id backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <user_id backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+
+                <wallet_url>https://api.latipay.net/v2/detail</wallet_url>
+                <staging_wallet_url>https://api-staging.latipay.net/v2/detail</staging_wallet_url>
             </latipay>
         </payment>
     </default>

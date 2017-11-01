@@ -72,4 +72,20 @@ class Latipay extends AbstractHelper
         return false;
     }
 
+    public function callGetApi($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        curl_close($ch);
+        if (!$error) {
+            return json_decode($response, true);
+        }
+        return false;
+    }
+
 }

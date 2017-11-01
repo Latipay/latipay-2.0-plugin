@@ -1,9 +1,13 @@
+.payment-method-title .label .latipay-title {
+    
+}
 .payment-method-title .label .latipay-title:after {
     content: "";
     width: 72px;
     height: 41px;
     background: url(../images/logo.svg) no-repeat;
-    display: inline-block;
+    display: table-cell;
+    vertical-align: middle;
 }
 .payment-method-content #latipay-icon{
     width: 223px;

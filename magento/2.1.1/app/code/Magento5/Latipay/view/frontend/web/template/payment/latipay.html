@@ -29,7 +29,7 @@
         </div>
         <div class="latipay-icon"></div>
         <p data-bind="html: getInstructions()"></p>
-        <div id="latipay-icon">&nbsp;</div>
+        <!-- <div id="latipay-icon">&nbsp;</div> -->
         <form id="latipay-form" data-role="latipay-form"  data-bind='attr: {class: "form form-latipay payment-currency-" + getCurrencyCode()}'>
             <fieldset class="fieldset payment method" data-bind='attr: {id: "payment_form_" + getCode()}'>
                 <div class="field field-number required">
@@ -46,10 +46,10 @@
                                 <input name="payment[latipay_method]" id="latipay-method-alipay" type="radio" value="alipay">
                                 <label for="latipay-method-alipay">Alipay</label>
                             </li>
-                            <li class="latipay-options-item-bank">
+                            <!-- <li class="latipay-options-item-bank">
                                 <input name="payment[latipay_method]" id="latipay-method-bank" type="radio" value="onlineBank">
                                 <label for="latipay-method-bank">Online Bank</label>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
