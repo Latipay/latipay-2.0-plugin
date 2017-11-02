@@ -12,12 +12,6 @@
                 <input name="payment[latipay_method]" id="latipay-method-alipay" type="radio" value="alipay">
                 <label for="latipay-method-alipay">Alipay</label>
             </li>
-            <?php if(Mage::app()->getStore()->getCurrentCurrencyCode() != 'CNY'):?>
-            <li class="latipay-options-item">
-                <input name="payment[latipay_method]" id="latipay-method-bank" type="radio" value="onlineBank">
-                <label for="latipay-method-bank">Online Bank</label>
-            </li>
-            <?php endif;?>
         </ul>
     </div>
 </div>

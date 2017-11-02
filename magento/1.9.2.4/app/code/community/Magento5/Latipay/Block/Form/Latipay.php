@@ -11,6 +11,7 @@ class Magento5_Latipay_Block_Form_Latipay extends Mage_Payment_Block_Form
 
         parent::_construct();
         $this->setTemplate('magento5/latipay/form/latipaypaymentmethod.phtml')
+        	->setMethodTitle('')
             ->setMethodLabelAfterHtml($mark->toHtml());
     }
 
