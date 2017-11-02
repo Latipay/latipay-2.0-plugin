@@ -8,7 +8,7 @@
                 <title>Latipay</title>
                 <service_provider>latipay_paisa</service_provider>
                 <production_url>https://api.latipay.net/v2/transaction</production_url>
-                <sandbox_url>https://api.latipay.net/v2/transaction</sandbox_url>
+                <sandbox_url>https://api-staging.latipay.net/v2/transaction</sandbox_url>
                 <environment>sandbox</environment>
                 <redirect_url>latipay/standard/redirect</redirect_url>
                 <return_url>latipay/standard/response</return_url>
