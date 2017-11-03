@@ -46,7 +46,7 @@
             <latipay>
                 <active>1</active>
                 <title>Latipay</title>
-                <transaction_url><![CDATA[https://api.latipay.net/v2/transaction]]></transaction_url>
+                <transaction_url><![CDATA[https://api-staging.latipay.net/v2/transaction]]></transaction_url>
                 <model>latipay/paymentmethod</model>
                 <wallet_id>W00000001</wallet_id>
                 <user_id>U00001534</user_id>

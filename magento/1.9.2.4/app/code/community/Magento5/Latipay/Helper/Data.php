@@ -6,7 +6,7 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
     protected $_supportedCurrencies = array(
         'NZD', //New Zealand Dollar
         'AUD', //Australian Dollar
-//        'RMB',   
+        'CNY', //China RMB
     );
 
     public function canUseCurrency($currencyCode)
