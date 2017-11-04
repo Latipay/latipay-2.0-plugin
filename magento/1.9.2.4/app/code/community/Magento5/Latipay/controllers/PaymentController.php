@@ -47,7 +47,7 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
         $apiKey = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/api_key'));
 
         $signature = $this->getRequest()->getParam('signature');
-        $transactionId = $this->getRequest()->getParam('transaction_id');
+        $transactionId = $this->getRequest()->getParam('order_id');
         $merchantReference = $this->getRequest()->getParam('merchant_reference');
         $currency = $this->getRequest()->getParam('currency');
         $amount = $this->getRequest()->getParam('amount');
@@ -57,8 +57,7 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
         $signText = $merchantReference . $paymentMethod . $status . $currency . $amount;
         $callbackSignature = hash_hmac('sha256', $signText, $apiKey);
         $postData = $this->getRequest()->getParams();
-        $logData = var_export($postData);
-        Mage::log($logData, null, 'latipay_transaction.log');
+
         if ($signature == $callbackSignature) {
             if ($status == "paid") {
                 $order = Mage::getModel('sales/order')->loadByIncrementId($merchantReference);
@@ -68,6 +67,7 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
                 foreach ($this->_transactionDetailKeys as $key) {
                     isset($postData[$key]) and $payment->setTransactionAdditionalInfo($key, $postData[$key]);
                 }
+
                 if ($order->canInvoice()) {
                     $invoice = $order->prepareInvoice();
                     $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_OFFLINE);
@@ -75,6 +75,7 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
                     $invoice->save();
                     $order->addStatusHistoryComment(Mage::helper('core')->__('Invoice #%s created', $invoice->getIncrementId()), false)->setIsCustomerNotified(false);
                 }
+
                 $order->addStatusHistoryComment(Mage::helper('core')->__('Payment successful'), false)->setIsCustomerNotified(false);
 
                 try {
@@ -83,19 +84,16 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
                     $order->setState($state, $status);
                     $order->save();
                     Mage::getSingleton('checkout/session')->unsQuoteId();
-                    Mage::log($logData, null, 'latipay_transaction_success.log');
-
+                    
                     if ($type == 'return') {
                         $this->_redirect('checkout/onepage/success', array('_secure' => false));
                     } else {
                         die('success');
                     }
                 } catch (Exception $e) {
-
                 }
 
             } else {
-                Mage::log($logData, null, 'latipay_transaction_fail.log');
                 if ($type == 'return') {
                     $this->_redirect('checkout/onepage/error', array('_secure' => true));
                 } else {
@@ -103,7 +101,6 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
                 }
             }
         } else {
-            Mage::log($logData, null, 'latipay_transaction_signature_fail.log');
             if ($type == 'return') {
                 $this->_redirect('checkout/onepage/error', array('_secure' => true));
             } else {
