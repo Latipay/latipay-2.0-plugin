@@ -2,7 +2,6 @@
 
 class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
 {
-
     protected $_supportedCurrencies = array(
         'NZD', //New Zealand Dollar
         'AUD', //Australian Dollar
@@ -31,9 +30,9 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
         $orderData = json_encode($this->getOrderData());
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $transactionUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $orderData);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json"
@@ -80,5 +79,34 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
         return $data;
     }
 
+    public function getWalletData()
+    {
+        $data['wallet_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/wallet_id'));
+        $data['user_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/user_id'));
+        if (!empty($data['wallet_id']) && !empty($data['user_id'])) {
+            $requestWalletUrl = 'https://api-staging.latipay.net/v2/detail/' . $data['wallet_id'] . '?user_id=' . $data['user_id'];
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $requestWalletUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Content-Type: application/json"
+            ));
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+            if (!$error) {
+                $wallet = json_decode($response, true);
+                if (is_array($wallet) && isset($wallet['code']) && ($wallet['code'] === 0)) {
+                    $wallet = $wallet['payment_method'];
+                }
+            }
+        }
+        if (!isset($wallet) or empty($wallet)) {
+            $wallet = 'Wechat,Alipay';
+        }
+        $wallet = explode(',', $wallet);
 
+        return $wallet;
+    }
 }
