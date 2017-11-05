@@ -4,7 +4,7 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
 {
     protected $_transactionDetailKeys = array(
         'signature',
-        'transaction_id',
+        'order_id',
         'merchant_reference',
         'currency',
         'amount',
