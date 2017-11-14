@@ -55,7 +55,7 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
      */
     protected function getWalletData()
     {
-        return nl2br($this->escaper->escapeHtml($this->method->getWalletData(), ['ul', 'li', 'p', 'b', 'strong']));
+        return $this->method->getWalletData();
     }
 
     /**
