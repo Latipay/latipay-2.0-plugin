@@ -99,6 +99,8 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
                 $wallet = json_decode($response, true);
                 if (is_array($wallet) && isset($wallet['code']) && ($wallet['code'] === 0)) {
                     $wallet = $wallet['payment_method'];
+                } else {
+                    $wallet = '';
                 }
             }
         }

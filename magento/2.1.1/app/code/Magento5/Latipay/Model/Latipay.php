@@ -7,7 +7,6 @@ use Magento\Sales\Api\Data\TransactionInterface;
 
 class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
 {
-
     const PAYMENT_LATIPAY_CODE = 'latipay';
 
     protected $_code = self::PAYMENT_LATIPAY_CODE;
@@ -109,8 +108,7 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Eav\Api\AttributeSetRepositoryInterface $attributeSet,
         \Magento\Store\Model\StoreManagerInterface $storeManager
 
-    )
-    {
+    ) {
         $this->helper = $helper;
         $this->orderSender = $orderSender;
         $this->httpClientFactory = $httpClientFactory;
@@ -130,7 +128,6 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
             $scopeConfig,
             $logger
         );
-
     }
 
     public function canUseForCurrency($currencyCode)
@@ -202,14 +199,13 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         die(__('Transaction failure'));
-
     }
 
     public function getTransactionData()
     {
         $transactionUrl = $this->getTransactionUrl();
         $orderData = json_encode($this->getOrderData());
-        return $this->helper->callApi($transactionUrl,$orderData);
+        return $this->helper->callApi($transactionUrl, $orderData);
     }
 
     public function getOrderData()
@@ -243,7 +239,48 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         return $data;
     }
 
-    public function validateResponse($response){
+    public function getWalletData()
+    {
+        $data['user_id'] = $this->getConfigData('user_id');
+        $data['wallet_id'] = $this->getConfigData('wallet_id');
+        if (!empty($data['wallet_id']) && !empty($data['user_id'])) {
+            $requestWalletUrl = 'https://api-staging.latipay.net/v2/detail/' . $data['wallet_id'] . '?user_id=' . $data['user_id'];
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $requestWalletUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Content-Type: application/json"
+            ));
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+            if (!$error) {
+                $wallet = json_decode($response, true);
+                if (is_array($wallet) && isset($wallet['code']) && ($wallet['code'] === 0)) {
+                    $wallet = $wallet['payment_method'];
+                } else {
+                    $wallet = '';
+                }
+            }
+        }
+        if (!isset($wallet) or empty($wallet)) {
+            $wallet = 'Wechat,Alipay';
+        }
+        $wallet = explode(',', $wallet);
+        $return = '';
+        foreach ($wallet as $k=>$v) {
+            $checked = '';
+            if ($k == 0) {
+                $checked = 'checked="checked"';
+            }
+            $return .= '<li class="latipay-options-item"><input name="payment[latipay_method]" id="latipay-method-' . strtolower($v) . '" type="radio" value="' . strtolower($v) . '" ' . $checked . '><label for="latipay-method-' . strtolower($v) . '">' . $v . '</label></li>';
+        }
+        return $return;
+    }
+
+    public function validateResponse($response)
+    {
         $apiKey = $this->getConfigData('api_key');
         $signature = $response['signature'];
         $merchantReference = $response['merchant_reference'];
@@ -262,7 +299,7 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
     public function postProcessing(\Magento\Sales\Model\Order $order,
                                    \Magento\Framework\DataObject $payment, $response)
     {
-        if(!empty($response['order_id'])){
+        if (!empty($response['order_id'])) {
             $payment->setTransactionId($response['order_id']);
         }
         foreach ($this->_transactionDetailKeys as $key) {
@@ -293,5 +330,4 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         $order->addStatusHistoryComment(__("Latipay Response : %1", json_encode($response)));
         $order->save();
     }
-
 }
