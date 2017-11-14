@@ -21,6 +21,9 @@ define(
         getInstructions: function () {
             return window.checkoutConfig.payment.latipay.instructions;
         },
+        getWalletData: function () {
+            return window.checkoutConfig.payment.latipay.walletdata;
+        },
         getTooltip: function () {
             if (window.checkoutConfig.payment.latipay.tooltip.length > 0) {
                 $('.tooltip-latipay').show();

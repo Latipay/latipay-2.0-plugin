@@ -1,7 +1,9 @@
 <?php
 
 namespace Magento5\Latipay\Model;
+
 use Magento\Framework\Escaper;
+
 class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
 {
     protected $methodCode = \Magento5\Latipay\Model\Latipay::PAYMENT_LATIPAY_CODE;
@@ -13,21 +15,22 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
      * @var Escaper
      */
     protected $escaper;
-	
+    
 
     public function __construct(
         \Magento\Payment\Helper\Data $paymenthelper,
         Escaper $escaper
-    ){
+    ) {
         $this->method = $paymenthelper->getMethodInstance($this->methodCode);
         $this->escaper = $escaper;
-
     }
 
-    public function getConfig(){
+    public function getConfig()
+    {
         $config = [];
         if ($this->method->isAvailable()) {
             $config['payment'][$this->methodCode]['instructions'] = $this->getInstructions();
+            $config['payment'][$this->methodCode]['walletdata'] = $this->getWalletData();
             $config['payment'][$this->methodCode]['tooltip'] = $this->getTooltip();
             $config['payment'][$this->methodCode]['redirectUrl'] = $this->method->getRedirectUrl();
         }
@@ -43,6 +46,16 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
     protected function getInstructions()
     {
         return nl2br($this->escaper->escapeHtml($this->method->getInstructions(), ['ul', 'li', 'p', 'b', 'strong']));
+    }
+
+    /**
+     * Get instructions text from config
+     *
+     * @return string
+     */
+    protected function getWalletData()
+    {
+        return nl2br($this->escaper->escapeHtml($this->method->getWalletData(), ['ul', 'li', 'p', 'b', 'strong']));
     }
 
     /**
