@@ -64,56 +64,39 @@ class ControllerPaymentLatipay2 extends Controller {
 		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
-		
-		//执行并获取HTML文档内容
-		$output = curl_exec($ch);
-		
-		$html = json_decode($output);
-		
-		//释放curl句柄
-		curl_close($ch);
-		
-		//打印获得的数据
-		//print_r($html);
-		//( [code] => 0 [message] => SUCCESS [currency] => CNY [payment_method] => Payease, Alipay, Wechat ) 
 
-		//给select赋值
-		$select_array = array();
-		if(isset($html->message) && $html->message == 'SUCCESS'){
-			
-			
-			$lin_shi_array = explode(',',$html->payment_method);
-			
-			foreach($lin_shi_array as $key => $value){
-				
-				if(trim($value) == 'Payease'){
+        //执行并获取HTML文档内容
+        $output = curl_exec($ch);
+        $error = curl_error($ch);
+        //释放curl句柄
+        curl_close($ch);
 
-					$select_array[] = array(
-						'name' => 'Online Bank',
-						'value' => 'onlineBank'
-					);
-					
-				}else if(trim($value) == 'Alipay'){
+        $wallet = '';
+        if (!$error) {
+            $data = json_decode($output, true);
+            if (is_array($data) && isset($data['code']) && ($data['code'] === 0)) {
+                $wallet = $data['payment_method'];
+            }
+        }
+        if (!$wallet) {
+            $wallet = 'Wechat,Alipay';
+        }
 
-					$select_array[] = array(
-						'name' => 'Alipay',
-						'value' => 'alipay'
-					);
-					
-				}else if(trim($value) == 'Wechat'){
+        $walletList = explode(',', $wallet);
 
-					$select_array[] = array(
-						'name' => 'Wechat',
-						'value' => 'wechat'
-					);
-				}
-				
-				
-			}
-			
-		}
+        //打印获得的数据
+        //print_r($html);
+        //( [code] => 0 [message] => SUCCESS [currency] => CNY [payment_method] => Payease, Alipay, Wechat )
+
+        $select_array = array();
+        foreach ($walletList as $key => $value) {
+            $select_array[] = array(
+                'name'  => $value,
+                'value' => strtolower($value),
+            );
+        }
+
 		$data['select_array'] = $select_array;
-		//print_r($select_array);exit;
 
 		return $this->load->view('payment/latipay2', $data);
 	}
