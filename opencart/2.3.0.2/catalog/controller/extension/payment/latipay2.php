@@ -29,8 +29,10 @@ class ControllerExtensionPaymentLatipay2 extends Controller {
         $data['latipay_error'] = '';
 
         //根据 wallet_id + user_id 获取 get the curency and payment method
+        $wallet_id = '';
         if (isset($this->session->data['currency'])) {
             $currency = $this->session->data['currency'];
+
             if ($currency == 'NZD') {
                 $wallet_id = trim($this->config->get('latipay2_wallet_id_nzd'));
             } else if ($currency == 'AUD') {
@@ -70,7 +72,7 @@ class ControllerExtensionPaymentLatipay2 extends Controller {
         curl_close($ch);
 
         if ($error) {
-            $data['latipay_error'] = "Latipay Error! Please try later. (api request error {$error}:{$error})";
+            $data['latipay_error'] = "Latipay Error! Please try later. (api request error:{$error})";
             return $this->load->view('extension/payment/latipay2', $data);
         }
 
@@ -124,21 +126,24 @@ class ControllerExtensionPaymentLatipay2 extends Controller {
 		
 		$api_key = trim($this->config->get('latipay2_api_key'));
 		$user_id = trim($this->config->get('latipay2_user_id'));
-		
-		if(isset($this->session->data['currency'])){
-			$currency = $this->session->data['currency'];
-			
-			if($currency == 'NZD'){
-				$wallet_id = trim($this->config->get('latipay2_wallet_id_nzd'));
-			}else if($currency == 'AUD'){
-				$wallet_id = trim($this->config->get('latipay2_wallet_id_aud'));
-			}else if($currency == 'CNY'){
-				$wallet_id = trim($this->config->get('latipay2_wallet_id_cny'));
-			}
-			
-		}else{
-			$wallet_id = trim($this->config->get('latipay2_wallet_id_nzd'));	
-		}
+
+        $wallet_id = '';
+        if (isset($this->session->data['currency'])) {
+            $currency = $this->session->data['currency'];
+
+            if ($currency == 'NZD') {
+                $wallet_id = trim($this->config->get('latipay2_wallet_id_nzd'));
+            } else if ($currency == 'AUD') {
+                $wallet_id = trim($this->config->get('latipay2_wallet_id_aud'));
+            } else if ($currency == 'CNY') {
+                $wallet_id = trim($this->config->get('latipay2_wallet_id_cny'));
+            }
+        }
+        if (!$wallet_id) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode(array('error' => "Error! Currency is invalid. Please try later. (currency : {$this->session->data['currency']})")));
+            return;
+        }
 
 		$total = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);//订单总金额   
 		

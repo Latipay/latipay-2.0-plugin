@@ -36,6 +36,7 @@ class ModelExtensionPaymentLatipay2 extends Model {
 		}
 
 		// 根据当前货币获取wallet_id
+        $wallet_id = '';
 		if (isset($this->session->data['currency'])) {
 			$currency = $this->session->data['currency'];
 			if ($currency == 'NZD') {
