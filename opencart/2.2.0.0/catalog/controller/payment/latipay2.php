@@ -11,59 +11,57 @@
 include_once( DIR_SYSTEM . 'library/latipay2/lib/Latipay.php');
 require_once( DIR_SYSTEM . 'library/latipay2/lib/IP.php');
 class ControllerPaymentLatipay2 extends Controller {
-	public function index() {
-		
-		$this->language->load('payment/latipay2');
-		//Payment method:
-		$data['text_payment_method'] = $this->language->get('text_payment_method');
-		
-		$data['text_alipay'] = $this->language->get('text_alipay');
-		$data['text_wechat'] = $this->language->get('text_wechat');
-		$data['text_onlineBank'] = $this->language->get('text_onlineBank');
-		
-		
-		$data['button_confirm'] = $this->language->get('button_confirm');
+	public function index()
+    {
+        $this->language->load('payment/latipay2');
+        //Payment method:
+        $data['text_payment_method'] = $this->language->get('text_payment_method');
 
-		$data['text_loading'] = $this->language->get('text_loading');
+        $data['text_alipay'] = $this->language->get('text_alipay');
+        $data['text_wechat'] = $this->language->get('text_wechat');
+        $data['text_onlineBank'] = $this->language->get('text_onlineBank');
 
-		$data['continue'] = $this->url->link('checkout/success');
-		
-		 
-		//根据 wallet_id + user_id 获取 get the curency and payment method
-		
-		if(isset($this->session->data['currency'])){
-			$currency = $this->session->data['currency'];
-			
-			if($currency == 'NZD'){
-				$wallet_id = trim($this->config->get('latipay2_wallet_id_nzd'));
-			}else if($currency == 'AUD'){
-				$wallet_id = trim($this->config->get('latipay2_wallet_id_aud'));
-			}else if($currency == 'CNY'){
-				$wallet_id = trim($this->config->get('latipay2_wallet_id_cny'));
-			}
-			
-		}else{
-			$wallet_id = trim($this->config->get('latipay2_wallet_id_nzd'));	
-		}
-		
-		
-		$user_id = trim($this->config->get('latipay2_user_id'));
-		$api_key = trim($this->config->get('latipay2_api_key'));
-		
-		$_prehash =  $wallet_id . $user_id;
-    	$signature = hash_hmac('sha256', $_prehash, $api_key);
-		
-		$url = trim($this->config->get('latipay2_payment_method_url')).$wallet_id."?user_id=".$user_id."&signature=".$signature;
-			
-		//初始化
-		$ch = curl_init();
-		
-		//设置选项，包括URL
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
+        $data['button_confirm'] = $this->language->get('button_confirm');
+
+        $data['text_loading'] = $this->language->get('text_loading');
+
+        $data['continue'] = $this->url->link('checkout/success');
+        $data['latipay_error'] = '';
+
+        //根据 wallet_id + user_id 获取 get the curency and payment method
+        if (isset($this->session->data['currency'])) {
+            $currency = $this->session->data['currency'];
+            if ($currency == 'NZD') {
+                $wallet_id = trim($this->config->get('latipay2_wallet_id_nzd'));
+            } else if ($currency == 'AUD') {
+                $wallet_id = trim($this->config->get('latipay2_wallet_id_aud'));
+            } else if ($currency == 'CNY') {
+                $wallet_id = trim($this->config->get('latipay2_wallet_id_cny'));
+            }
+        }
+        // 没有取到 wallet_id, 则不显示latipay
+        if (!$wallet_id) {
+            $data['latipay_error'] = "Latipay Error! Please try later.(Latipay wallet_id Not found. currency: {$this->session->data['currency']})";
+            return $this->load->view('payment/latipay2', $data);
+        }
+
+        $user_id = trim($this->config->get('latipay2_user_id'));
+        $api_key = trim($this->config->get('latipay2_api_key'));
+
+        $_prehash = $wallet_id . $user_id;
+        $signature = hash_hmac('sha256', $_prehash, $api_key);
+
+        $url = trim($this->config->get('latipay2_payment_method_url')) . $wallet_id . "?user_id=" . $user_id . "&signature=" . $signature;
+
+        //初始化
+        $ch = curl_init();
+
+        //设置选项，包括URL
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
 
         //执行并获取HTML文档内容
         $output = curl_exec($ch);
@@ -71,13 +69,17 @@ class ControllerPaymentLatipay2 extends Controller {
         //释放curl句柄
         curl_close($ch);
 
-        $wallet = '';
-        if (!$error) {
-            $data = json_decode($output, true);
-            if (is_array($data) && isset($data['code']) && ($data['code'] === 0)) {
-                $wallet = $data['payment_method'];
-            }
+        if ($error) {
+            $data['latipay_error'] = "Latipay Error! Please try later. (api request error:{$error})";
+            return $this->load->view('payment/latipay2', $data);
         }
+
+        $wallet = '';
+        $apiData = json_decode($output, true);
+        if (is_array($apiData) && isset($apiData['code']) && ($apiData['code'] === 0)) {
+            $wallet = $apiData['payment_method'];
+        }
+
         if (!$wallet) {
             $wallet = 'Wechat,Alipay';
         }
@@ -91,15 +93,15 @@ class ControllerPaymentLatipay2 extends Controller {
         $select_array = array();
         foreach ($walletList as $key => $value) {
             $select_array[] = array(
-                'name'  => $value,
+                'name' => $value,
                 'value' => strtolower($value),
             );
         }
 
-		$data['select_array'] = $select_array;
+        $data['select_array'] = $select_array;
 
-		return $this->load->view('payment/latipay2', $data);
-	}
+        return $this->load->view('payment/latipay2', $data);
+    }
 	
 	public function confirm() {
 		

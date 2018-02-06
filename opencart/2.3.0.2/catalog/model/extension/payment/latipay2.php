@@ -23,8 +23,7 @@ class ModelExtensionPaymentLatipay2 extends Model {
 		} else {
 			$status = false;
 		}
-		
-		
+
 		//此支付接口,支付货币为CNY，NZD或AUD
 		$currencies = array(
 			'CNY',
@@ -35,7 +34,22 @@ class ModelExtensionPaymentLatipay2 extends Model {
 		if (!in_array(strtoupper($this->session->data['currency']), $currencies)) {
 			$status = false;
 		}
-		
+
+		// 根据当前货币获取wallet_id
+		if (isset($this->session->data['currency'])) {
+			$currency = $this->session->data['currency'];
+			if ($currency == 'NZD') {
+				$wallet_id = trim($this->config->get('latipay2_wallet_id_nzd'));
+			} elseif ($currency == 'AUD') {
+				$wallet_id = trim($this->config->get('latipay2_wallet_id_aud'));
+			} elseif ($currency == 'CNY') {
+				$wallet_id = trim($this->config->get('latipay2_wallet_id_cny'));
+			}
+		}
+		// 没有取到 wallet_id, 则不显示latipay支付方式
+		if (!$wallet_id) {
+			$status = false;
+		}
 
 		$method_data = array();
 
