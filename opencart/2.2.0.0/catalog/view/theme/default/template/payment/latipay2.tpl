@@ -1,3 +1,8 @@
+<?php if ($latipay_error): ?>
+<div class="well well-sm">
+    <?php echo $latipay_error; ?>
+</div>
+<?php else : ?>
 <div class="well well-sm">
   <?php echo $text_payment_method; ?>
   <select class="form-control" id="payment_method2" name="payment_method2">
@@ -39,3 +44,4 @@ $('#button-confirm').on('click', function() {
 	});
 });
 //--></script>
+<?php endif; ?>
