@@ -23,8 +23,8 @@
 * Download
 	* [ECShop 3.0.0.zip](https://github.com/Latipay/latipay-2.0-plugin/raw/master/target/ecshop-3.0.0.zip?1)
 
-* Guide
-		* [Installation Guide](./install/ECShop_3.0_x_Latipay_2.0_Integration_Guide.pdf)
+* Guide		
+	* [Installation Guide](./install/ECShop_3.0_x_Latipay_2.0_Integration_Guide.pdf)
 
 
 ### OpenCart
