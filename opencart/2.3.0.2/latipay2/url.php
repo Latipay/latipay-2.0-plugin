@@ -67,24 +67,11 @@ $order_status_id = $config->get('latipay2_order_status_id');
 //merchant_reference=41&payment_method=alipay&status=paid&currency=NZD&amount=0.01&signature=86c1f12d0f96d2d434973eddc212cf5daf7bf11bcd4d605da035d3daa43acd98
 $file  = 'latipay2_url_log.txt';//要写入文件的文件名（可以是任意文件名），如果文件不存在，将会创建一个
 
-
-$content = "返回GET值 : ";
-
-$log = '';
-if($_POST){  
-    //$log.='|POST'.'|'.$_POST."\n";  
-    foreach($_POST as $key =>$value){  
-        $log .= '|'.$key.":".$value;  
-    }  
-}else{  
-    //$log.='|GET'.'|'.$_GET."\n";  
-    foreach($_GET as $key =>$value){  
-		$log .= '|'.$key.":".$value;  
-	}  
-}  
-
-file_put_contents($file , $content . $log , FILE_APPEND);
-
+$postStr = $_POST ? json_encode($_POST) : '';
+$getStr = $_GET ? json_encode($_GET) : '';
+$logStr = date('Y-m-d H:i:s') . ' POST CALLBACK : ' . $postStr . PHP_EOL ;
+$logStr .= date('Y-m-d H:i:s') . ' GET CALLBACK : ' . $getStr . PHP_EOL;
+file_put_contents($file , $logStr , FILE_APPEND);
 
 $order_id = $_GET['merchant_reference'];
 

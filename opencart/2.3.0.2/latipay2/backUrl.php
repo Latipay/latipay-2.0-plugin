@@ -47,24 +47,11 @@ $order_status_id = $config->get('latipay2_order_status_id');
 
 $file  = 'latipay2_back_url_log.txt';//要写入文件的文件名（可以是任意文件名），如果文件不存在，将会创建一
 
-
-$content = "返回POST值 : ";
-
-$log = '';
-if ($_POST) {
-    $log.='|POST'.'|'.$_POST."\n";
-    foreach ($_POST as $key =>$value) {
-        $log .= '|'.$key.":".$value;
-    }
-} else {
-    $log.='|GET'.'|'.$_GET."\n";
-    foreach ($_GET as $key =>$value) {
-        $log .= '|'.$key.":".$value;
-    }
-}
-
-file_put_contents($file, $content . $log, FILE_APPEND);
-
+$postStr = $_POST ? json_encode($_POST) : '';
+$getStr = $_GET ? json_encode($_GET) : '';
+$logStr = date('Y-m-d H:i:s') . ' POST CALLBACK : ' . $postStr . PHP_EOL ;
+$logStr .= date('Y-m-d H:i:s') . ' GET CALLBACK : ' . $getStr . PHP_EOL;
+file_put_contents($file , $logStr , FILE_APPEND);
 
 $order_id = $_POST['merchant_reference'];
 
