@@ -1,0 +1,182 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-latipay2" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+          {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+      {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+      {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-latipay2" class="form-horizontal">
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-user_id"><span data-toggle="tooltip" title="{{ entry_user_id }}">{{ entry_user_id }}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_latipay2_user_id" value="{{ payment_latipay2_user_id }}" placeholder="{{ entry_user_id }}" id="input-user_id" class="form-control" />
+                {% if error_user_id %}
+              <div class="text-danger">{{ error_user_id }}</div>
+                {% endif %}
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-api_key"><span data-toggle="tooltip" title="{{ entry_api_key }}">{{ entry_api_key }}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_latipay2_api_key" value="{{ payment_latipay2_api_key }}" placeholder="{{ entry_api_key }}" id="input-api_key" class="form-control" />
+              {% if error_api_key %}
+              <div class="text-danger">{{ error_api_key }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- NZD -->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-wallet_id_nzd"><span data-toggle="tooltip" title="{{ entry_wallet_id_nzd }}">{{ entry_wallet_id_nzd }}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_latipay2_wallet_id_nzd" value="{{ payment_latipay2_wallet_id_nzd }}" placeholder="{{ entry_wallet_id_nzd }}" id="input-wallet_id_nzd" class="form-control" />
+              {% if error_wallet_id_nzd %}
+              <div class="text-danger">{{ error_wallet_id_nzd }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- AUD -->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-wallet_id_aud"><span data-toggle="tooltip" title="{{ entry_wallet_id_aud }}">{{ entry_wallet_id_aud }}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_latipay2_wallet_id_aud" value="{{ payment_latipay2_wallet_id_aud }}" placeholder="{{ entry_wallet_id_aud }}" id="input-wallet_id_aud" class="form-control" />
+              {% if error_wallet_id_aud %}
+              <div class="text-danger">{{ error_wallet_id_aud }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- CNY -->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-wallet_id_cny"><span data-toggle="tooltip" title="{{ entry_wallet_id_cny }}">{{ entry_wallet_id_cny }}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_latipay2_wallet_id_cny" value="{{ payment_latipay2_wallet_id_cny }}" placeholder="{{ entry_wallet_id_cny }}" id="input-wallet_id_cny" class="form-control" />
+              {% if error_wallet_id_cny %}
+              <div class="text-danger">{{ error_wallet_id_cny }}</div>
+              {% endif %}
+            </div>
+          </div>
+			
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-huan_jing">{{ entry_huan_jing }}</label>
+            <div class="col-sm-10">
+              <select name="payment_latipay2_huan_jing" id="input-huan_jing" class="form-control">
+                
+                <option value="0" {% if payment_latipay2_huan_jing == '0' %} {{ 'selected="selected"' }} {% endif %}>{{ entry_huan_jing_ce_shi }}</option>
+                <option value="1" {% if payment_latipay2_huan_jing == '1' %} {{ 'selected="selected"' }} {% endif %}>{{ entry_huan_jing_zheng_shi }}</option>
+
+              </select>
+            </div>
+          </div>
+          
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-payment_method_url"><span data-toggle="tooltip" title="{{ entry_payment_method_url }}">{{ entry_payment_method_url }}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_latipay2_payment_method_url" value="{{ payment_latipay2_payment_method_url }}" placeholder="{{ entry_payment_method_url }}" id="input-payment_method_url" class="form-control" />
+              {% if error_payment_method_url %}
+              <div class="text-danger">{{ error_payment_method_url }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-gateway_url"><span data-toggle="tooltip" title="{{ entry_gateway_url }}">{{ entry_gateway_url }}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_latipay2_gateway_url" value="{{ payment_latipay2_gateway_url }}" placeholder="{{ entry_gateway_url }}" id="input-gateway_url" class="form-control" />
+              {% if error_gateway_url %}
+              <div class="text-danger">{{ error_gateway_url }}</div>
+              {% endif %}
+            </div>
+          </div>
+            
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="{{ help_total }}">{{ entry_total }}</span></label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_latipay2_total" value="{{ payment_latipay2_total }}" placeholder="{{ entry_total }}" id="input-total" class="form-control" />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status }}</label>
+            <div class="col-sm-10">
+              <select name="payment_latipay2_order_status_id" id="input-order-status" class="form-control">
+                {% for order_status in order_statuses %}
+                {% if order_status.order_status_id == payment_latipay2_order_status_id %}
+                <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                {% else %}
+                <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-geo-zone">{{ entry_geo_zone }}</label>
+            <div class="col-sm-10">
+              <select name="payment_latipay2_geo_zone_id" id="input-geo-zone" class="form-control">
+                <option value="0">{{ text_all_zones }}</option>
+                {% for geo_zone in geo_zones %}
+                {% if geo_zone.geo_zone_id == payment_latipay2_geo_zone_id %}
+                <option value="{{ geo_zone.geo_zone_id }}" selected="selected">{{ geo_zone.name }}</option>
+                {% else %}
+                <option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>
+                {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          
+          
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <select name="payment_latipay2_status" id="input-status" class="form-control">
+                {% if payment_latipay2_status %}
+                <option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                <option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-sort-order">{{ entry_sort_order }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="payment_latipay2_sort_order" value="{{ payment_latipay2_sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
