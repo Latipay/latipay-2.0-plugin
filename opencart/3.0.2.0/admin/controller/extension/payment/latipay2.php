@@ -22,7 +22,7 @@ class ControllerExtensionPaymentLatipay2 extends Controller {
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->model_setting_setting->editSetting('latipay2', $this->request->post);
+			$this->model_setting_setting->editSetting('payment_latipay2', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
