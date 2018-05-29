@@ -31,7 +31,7 @@ $db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 $registry->set('db', $db);
 
 // Settings
-$query = $db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE code = 'latipay2' ");
+$query = $db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE code = 'payment_latipay2' ");
 foreach ($query->rows as $result) {
     $config->set($result['key'], $result['value']);
 }
