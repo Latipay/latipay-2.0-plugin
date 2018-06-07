@@ -29,6 +29,7 @@
 
 ### OpenCart
 * Download
+	* [OpenCart 3.0.2.0.zip](https://github.com/Latipay/latipay-2.0-plugin/raw/master/target/opencart-3.0.2.0.zip?1)
 	* [OpenCart 2.3.0.2.zip](https://github.com/Latipay/latipay-2.0-plugin/raw/master/target/opencart-2.3.0.2.zip?1)
 	* [OpenCart 2.2.0.0.zip](https://github.com/Latipay/latipay-2.0-plugin/raw/master/target/opencart-2.2.0.0.zip?1)
 	* [OpenCart 2.1.0.2.zip](https://github.com/Latipay/latipay-2.0-plugin/raw/master/target/opencart-2.1.0.2.zip?1)
