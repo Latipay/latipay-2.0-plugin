@@ -69,6 +69,12 @@ add_action('admin_menu', function(){
     					<input type="text" style="width:400px;" value="<?php echo esc_attr(isset($options['user_id'])?$options['user_id']:null)?>" name="xh_latipay[user_id]" />	
     					</td>
     				</tr>
+				<tr>
+					<th scope="row"><label>is_spotpay</label></th>
+					<td>
+					    <input type="text" style="width:400px;" value="<?php echo esc_attr(isset($options['is_spotpay'])?$options['is_spotpay']:null)?>" name="xh_latipay[is_spotpay]" />
+					</td>
+			    	</tr>
     				<tr>
     					<th scope="row"><label>Api key</label></th>
     					<td>
