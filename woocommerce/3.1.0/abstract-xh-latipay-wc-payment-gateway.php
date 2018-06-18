@@ -133,6 +133,13 @@ abstract class Abstract_XH_Latipay_Payment_Gateway extends WC_Payment_Gateway{
             'present_qr' => '1', // wechat
             'signature' => $signature,
         );
+        
+        if ($payment_method == 'alipay') {
+            $is_spotpay = isset($options['is_spotpay'])?$options['is_spotpay']:null;
+            if ($is_spotpay && $is_spotpay == 1) {
+                $post_data['is_spotpay'] = 1;
+            }
+        }
      
         try {
             $payment =  $latipay->createPayment($post_data);
