@@ -206,3 +206,63 @@ add_action('init', function(){
     }
     return;
 });
+
+
+add_action( 'xh_latipay_hook',  'xh_latipay_func');
+
+if ( ! wp_next_scheduled( 'xh_latipay_hook' ) ) {
+    wp_schedule_event(time(), 'quarter', 'xh_latipay_hook' );
+}
+
+add_filter('cron_schedules', function ($schedules) {
+    $schedules['quarter'] = [
+            'interval' => 900,
+            'display' => 'quarter',
+    ];
+    return $schedules;
+});
+
+function xh_latipay_func() {
+    require_wp_db();
+    global $wpdb;
+    require_once 'includes/lib/RestClient.php';
+
+    // get params for api
+    $options = get_option('xh_latipay',array());
+    if (!$options || empty($options['user_id']) || empty($options['api_key'])) {
+        return;
+    }
+    $gateway = "https://api.latipay.net/v2";
+    $user_id = $options['user_id'];
+    $api_key = $options['api_key'];
+
+    // status: wc-pending
+    // post_type: shop_order
+    $post_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type=%s AND post_status = %s", 'shop_order', 'wc-pending') );
+    
+    if (!$post_ids) {
+        return;
+    }
+
+    // check each pending order
+    foreach ($post_ids as $order_id) {
+        $_prehash =  $order_id . $user_id;
+        $signature = hash_hmac('sha256', $_prehash, $api_key);
+        
+        $client = new RestClient();
+        $response = $client->url("{$gateway}/transaction/{$order_id}?user_id={$user_id}&signature={$signature}")->get();
+        $res_data = json_decode($response, true);
+        
+        $_prehash_rsp =  $order_id . $res_data['payment_method'] . $res_data['status'] . $res_data['currency'] . $res_data['amount'];
+        $signature_rsp = hash_hmac('sha256', $_prehash_rsp, $api_key);
+        if ($signature_rsp != $res_data['signature']) {
+            continue;
+        }
+
+        // latipay return paid so complete order
+        if (isset($res_data['status']) && $res_data['status'] == 'paid') {
+            $order = new WC_Order($order_id);
+            $order->payment_complete(isset($res_data['transaction_id'])?$res_data['transaction_id']:null);
+        }
+    }
+}
