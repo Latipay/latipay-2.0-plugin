@@ -73,6 +73,9 @@ add_action('admin_menu', function(){
 					<th scope="row"><label>is_spotpay</label></th>
 					<td>
 					    <input type="text" style="width:400px;" value="<?php echo esc_attr(isset($options['is_spotpay'])?$options['is_spotpay']:null)?>" name="xh_latipay[is_spotpay]" />
+					    <div style="color:gray">
+					    	default empty, do not change, unless you’ve been told to.
+					    </div>
 					</td>
 			    	</tr>
     				<tr>
