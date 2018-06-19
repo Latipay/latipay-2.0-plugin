@@ -7,7 +7,7 @@ class XHLatipayWechatForWC extends Abstract_XH_LATIPAY_Payment_Gateway {
 		parent::__construct();
 		
 	    $this->icon               = XH_LATIPAY_URL . '/images/wechat.png';
-		$this->method_title       = __('Latipay - Wechat',XH_LATIPAY);
+		$this->method_title       = __('Latipay - WeChat',XH_LATIPAY);
 	}
 	
     public function get_payment_method()
