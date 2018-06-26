@@ -244,7 +244,7 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         $data['user_id'] = $this->getConfigData('user_id');
         $data['wallet_id'] = $this->getConfigData('wallet_id');
         if (!empty($data['wallet_id']) && !empty($data['user_id'])) {
-            $requestWalletUrl = 'https://api-staging.latipay.net/v2/detail/' . $data['wallet_id'] . '?user_id=' . $data['user_id'];
+            $requestWalletUrl = 'https://api.latipay.net/v2/detail/' . $data['wallet_id'] . '?user_id=' . $data['user_id'];
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $requestWalletUrl);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
