@@ -84,7 +84,7 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
         $data['wallet_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/wallet_id'));
         $data['user_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/user_id'));
         if (!empty($data['wallet_id']) && !empty($data['user_id'])) {
-            $requestWalletUrl = 'https://api-staging.latipay.net/v2/detail/' . $data['wallet_id'] . '?user_id=' . $data['user_id'];
+            $requestWalletUrl = 'https://api.latipay.net/v2/detail/' . $data['wallet_id'] . '?user_id=' . $data['user_id'];
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $requestWalletUrl);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
