@@ -241,15 +241,15 @@ class ControllerExtensionPaymentLatipay2 extends Controller {
 		}
 
 		if (!$this->request->post['latipay2_wallet_id_nzd']) {
-			$this->error['wallet_id_nzd'] = $this->language->get('error_wallet_id_nzd');
+			//$this->error['wallet_id_nzd'] = $this->language->get('error_wallet_id_nzd');
 		}
 		
 		if (!$this->request->post['latipay2_wallet_id_aud']) {
-			$this->error['wallet_id_aud'] = $this->language->get('error_wallet_id_aud');
+			//$this->error['wallet_id_aud'] = $this->language->get('error_wallet_id_aud');
 		}
 		
 		if (!$this->request->post['latipay2_wallet_id_cny']) {
-			$this->error['wallet_id_cny'] = $this->language->get('error_wallet_id_cny');
+			//$this->error['wallet_id_cny'] = $this->language->get('error_wallet_id_cny');
 		}
 		
 		if (!$this->request->post['latipay2_api_key']) {
