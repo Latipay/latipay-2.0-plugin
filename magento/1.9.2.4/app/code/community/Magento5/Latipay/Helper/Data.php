@@ -76,6 +76,15 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
             $data['present_qr'] = 1;
         }
 
+        if ($data['payment_method'] == 'alipay') {
+            $is_spotpay = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/is_spotpay'));
+            if ($is_spotpay && $is_spotpay == 1) {
+                $data['is_spotpay'] = 1;
+                $data['present_qr'] = 1;
+            }
+        }
+        $data['backPage_url'] = Mage::getUrl('checkout/onepage/index/', array('_secure' => true));
+
         return $data;
     }
 

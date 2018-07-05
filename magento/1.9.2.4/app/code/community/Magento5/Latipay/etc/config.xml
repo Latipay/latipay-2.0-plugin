@@ -55,6 +55,7 @@
                 <allowspecific>0</allowspecific>
                 <payment_action>sale</payment_action>
                 <about_url><![CDATA[http://www.latipay.nz/#your-chinese-payment-gateway-between-new-zealand-and-china]]></about_url>
+                <is_spotpay>0</is_spotpay>
             </latipay>
         </payment>
     </default>
