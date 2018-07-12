@@ -11,8 +11,8 @@
 include_once( DIR_SYSTEM . 'library/latipay2/lib/Latipay.php');
 require_once( DIR_SYSTEM . 'library/latipay2/lib/IP.php');
 class ControllerExtensionPaymentLatipay2 extends Controller {
-    public function index() {
-
+    public function index()
+    {
         $this->language->load('extension/payment/latipay2');
         //Payment method:
         $data['text_payment_method'] = $this->language->get('text_payment_method');
@@ -21,17 +21,16 @@ class ControllerExtensionPaymentLatipay2 extends Controller {
         $data['text_wechat'] = $this->language->get('text_wechat');
         $data['text_onlineBank'] = $this->language->get('text_onlineBank');
 
-
         $data['button_confirm'] = $this->language->get('button_confirm');
 
         $data['text_loading'] = $this->language->get('text_loading');
 
         $data['continue'] = $this->url->link('checkout/success');
-
+        $data['latipay_error'] = '';
 
         //根据 wallet_id + user_id 获取 get the curency and payment method
-
-        if(isset($this->session->data['currency'])){
+        $wallet_id = '';
+        if (isset($this->session->data['currency'])) {
             $currency = $this->session->data['currency'];
 
             if($currency == 'NZD'){
@@ -41,24 +40,21 @@ class ControllerExtensionPaymentLatipay2 extends Controller {
             }else if($currency == 'CNY'){
                 $wallet_id = trim($this->config->get('payment_latipay2_wallet_id_cny'));
             }
-
-        }else{
-            $wallet_id = trim($this->config->get('payment_latipay2_wallet_id_nzd'));
+        }
+        // 没有取到 wallet_id, 则不显示latipay
+        if (!$wallet_id) {
+            $data['latipay_error'] = "Latipay Error! Please try later.(Latipay wallet_id Not found. currency: {$this->session->data['currency']})";
+            return $this->load->view('extension/payment/latipay2', $data);
         }
 
 
         $user_id = trim($this->config->get('payment_latipay2_user_id'));
         $api_key = trim($this->config->get('payment_latipay2_api_key'));
 
-        $_prehash =  $wallet_id . $user_id;
+        $_prehash = $wallet_id . $user_id;
         $signature = hash_hmac('sha256', $_prehash, $api_key);
 
-        $url = trim($this->config->get('payment_latipay2_payment_method_url')).$wallet_id."?user_id=".$user_id."&signature=".$signature;
-
-        //echo $url;
-
-        //https://api-staging.latipay.net/v2/detail/W00000004?user_id=U00001534&signature=e5c5f33900bf7a0265447161c28071d52bd3df019cba6e94db1f59f55cdf7ed5
-        //https://fc7d6394.ngrok.io/v2/detail/W00000004?user_id=U00001534&signature=e5c5f33900bf7a0265447161c28071d52bd3df019cba6e94db1f59f55cdf7ed5
+        $url = trim($this->config->get('payment_latipay2_payment_method_url')) . $wallet_id . "?user_id=" . $user_id . "&signature=" . $signature;
 
         //初始化
         $ch = curl_init();
@@ -72,53 +68,40 @@ class ControllerExtensionPaymentLatipay2 extends Controller {
 
         //执行并获取HTML文档内容
         $output = curl_exec($ch);
-
-        $html = json_decode($output);
-
+        $error = curl_error($ch);
         //释放curl句柄
         curl_close($ch);
+
+        if ($error) {
+            $data['latipay_error'] = "Latipay Error! Please try later. (api request error:{$error})";
+            return $this->load->view('extension/payment/latipay2', $data);
+        }
+
+        $wallet = '';
+        $apiData = json_decode($output, true);
+        if (is_array($apiData) && isset($apiData['code']) && ($apiData['code'] === 0)) {
+            $wallet = $apiData['payment_method'];
+        }
+
+        if (!$wallet) {
+            $wallet = 'Wechat,Alipay';
+        }
+
+        $walletList = explode(',', $wallet);
 
         //打印获得的数据
         //print_r($html);
         //( [code] => 0 [message] => SUCCESS [currency] => CNY [payment_method] => Payease, Alipay, Wechat )
 
-        //给select赋值
         $select_array = array();
-        if(isset($html->message) && $html->message == 'SUCCESS'){
-
-
-            $lin_shi_array = explode(',',$html->payment_method);
-
-            foreach($lin_shi_array as $key => $value){
-
-                if(trim($value) == 'Payease'){
-
-                    $select_array[] = array(
-                        'name' => 'Online Bank',
-                        'value' => 'onlineBank'
-                    );
-
-                }else if(trim($value) == 'Alipay'){
-
-                    $select_array[] = array(
-                        'name' => 'Alipay',
-                        'value' => 'alipay'
-                    );
-
-                }else if(trim($value) == 'Wechat'){
-
-                    $select_array[] = array(
-                        'name' => 'Wechat',
-                        'value' => 'wechat'
-                    );
-                }
-
-
-            }
-
+        foreach ($walletList as $key => $value) {
+            $select_array[] = array(
+                'name' => $value,
+                'value' => strtolower($value),
+            );
         }
+
         $data['select_array'] = $select_array;
-        //print_r($select_array);exit;
 
         return $this->load->view('extension/payment/latipay2', $data);
     }
@@ -145,19 +128,22 @@ class ControllerExtensionPaymentLatipay2 extends Controller {
         $api_key = trim($this->config->get('payment_latipay2_api_key'));
         $user_id = trim($this->config->get('payment_latipay2_user_id'));
 
-        if(isset($this->session->data['currency'])){
+        $wallet_id = '';
+        if (isset($this->session->data['currency'])) {
             $currency = $this->session->data['currency'];
 
-            if($currency == 'NZD'){
+            if ($currency == 'NZD') {
                 $wallet_id = trim($this->config->get('payment_latipay2_wallet_id_nzd'));
-            }else if($currency == 'AUD'){
+            } else if ($currency == 'AUD') {
                 $wallet_id = trim($this->config->get('payment_latipay2_wallet_id_aud'));
-            }else if($currency == 'CNY'){
+            } else if ($currency == 'CNY') {
                 $wallet_id = trim($this->config->get('payment_latipay2_wallet_id_cny'));
             }
-
-        }else{
-            $wallet_id = trim($this->config->get('payment_latipay2_wallet_id_nzd'));
+        }
+        if (!$wallet_id) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode(array('error' => "Error! Currency is invalid. Please try later. (currency : {$this->session->data['currency']})")));
+            return;
         }
 
         $total = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);//订单总金额
