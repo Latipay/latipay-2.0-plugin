@@ -13,7 +13,7 @@
                 <redirect_url>latipay/standard/redirect</redirect_url>
                 <return_url>latipay/standard/response</return_url>
                 <callback_url>latipay/standard/callback</callback_url>
-                <about_url>http://www.latipay.nz/#your-chinese-payment-gateway-between-new-zealand-and-china</about_url>
+                <about_url>https://www.latipay.net</about_url>
                 <wallet_id backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <user_id backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
