@@ -109,5 +109,37 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
         }
 
     }
+    
+    public function cancelAction()
+    {
+        $session = Mage::getSingleton('checkout/session');
+        if ($session->getLastRealOrderId())
+        {
+            $order = Mage::getModel('sales/order')->loadByIncrementId($session->getLastRealOrderId());
+            if ($order->getId())
+            {
+                //Cancel order
+                if ($order->getState() != Mage_Sales_Model_Order::STATE_CANCELED)
+                {
+                    $order->registerCancellation("Canceled by Payment Provider")->save();
+                }
+                $quote = Mage::getModel('sales/quote')
+                    ->load($order->getQuoteId());
+                //Return quote
+                if ($quote->getId())
+                {
+                    $quote->setIsActive(1)
+                        ->setReservedOrderId(NULL)
+                        ->save();
+                    $session->replaceQuote($quote);
+                }
+
+                //Unset data
+                $session->unsLastRealOrderId();
+            }
+        }
+
+        return $this->getResponse()->setRedirect( Mage::getUrl('checkout/onepage'));
+    }
 
 }
