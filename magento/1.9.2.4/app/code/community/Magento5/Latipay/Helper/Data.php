@@ -83,7 +83,7 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
                 $data['present_qr'] = 1;
             }
         }
-        $data['backPage_url'] = Mage::getUrl('checkout/onepage/index/', array('_secure' => true));
+        $data['backPage_url'] = Mage::getUrl('latipay/payment/cancel', array('_secure' => true));
 
         return $data;
     }
