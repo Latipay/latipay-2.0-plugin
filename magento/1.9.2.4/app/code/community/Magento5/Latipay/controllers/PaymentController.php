@@ -88,7 +88,7 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
                     if ($type == 'return') {
                         $this->_redirect('checkout/onepage/success', array('_secure' => false));
                     } else {
-                        die('success');
+                        die('sent');
                     }
                 } catch (Exception $e) {
                 }
@@ -119,10 +119,10 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
             if ($order->getId())
             {
                 //Cancel order
-                if ($order->getState() != Mage_Sales_Model_Order::STATE_CANCELED)
-                {
-                    $order->registerCancellation("Canceled by Payment Provider")->save();
-                }
+                //if ($order->getState() != Mage_Sales_Model_Order::STATE_CANCELED)
+                //{
+                //    $order->registerCancellation("Canceled by Payment Provider")->save();
+                //}
                 $quote = Mage::getModel('sales/quote')
                     ->load($order->getQuoteId());
                 //Return quote
