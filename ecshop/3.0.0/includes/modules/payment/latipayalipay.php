@@ -50,7 +50,8 @@ if (isset($set_modules) && $set_modules == TRUE) {
     $modules[$i]['config'] = array(
         array('name' => 'latipayalipay_mchid', 'type' => 'text', 'value' => ''),
         array('name' => 'latipayalipay_key', 'type' => 'text', 'value' => ''),
-        array('name' => 'latipayalipay_walletid', 'type' => 'text', 'value' => ''),);
+        array('name' => 'latipayalipay_walletid', 'type' => 'text', 'value' => ''),
+        array('name' => 'latipayalipay_is_spotpay', 'type' => 'text', 'value' => '0'),);
     return;
 }
 
@@ -135,6 +136,10 @@ class latipayalipay
                 'present_qr' => '1'
             );
 
+        if (isset($payment['latipayalipay_is_spotpay']) && $payment['latipayalipay_is_spotpay'] == 1) {
+            $post_data['is_spotpay'] = 1;
+        }
+
         $arr = json_encode($post_data);
 
         $url = 'https://api.latipay.net/v2/transaction/';
@@ -169,7 +174,7 @@ class latipayalipay
         $status = $_GET['status'];
         $currency = $_GET['currency'];
         $amount = $_GET['amount'];
-        $api_key = $payment['latipaywechat_key'];
+        $api_key = $payment['latipayalipay_key'];
 
         $signature_string = $order_latipayId . $payment_method . $status . $currency . $amount;
         $signature = hash_hmac('sha256', $signature_string, $api_key);
@@ -212,7 +217,7 @@ class latipayalipay
         $status = $_POST['status'];
         $currency = $_POST['currency'];
         $amount = $_POST['amount'];
-        $api_key = $payment['latipaywechat_key'];
+        $api_key = $payment['latipayalipay_key'];
 
         $signature_string = $order_latipayId . $payment_method . $status . $currency . $amount;
         $signature = hash_hmac('sha256', $signature_string, $api_key);
