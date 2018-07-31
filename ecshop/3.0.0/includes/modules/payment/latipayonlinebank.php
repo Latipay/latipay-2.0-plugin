@@ -169,7 +169,7 @@ class latipayonlinebank
         $status = $_GET['status'];
         $currency = $_GET['currency'];
         $amount = $_GET['amount'];
-        $api_key = $payment['latipaywechat_key'];
+        $api_key = $payment['latipayonlinebank_key'];
 
         $signature_string = $order_latipayId . $payment_method . $status . $currency . $amount;
         $signature = hash_hmac('sha256', $signature_string, $api_key);
@@ -213,7 +213,7 @@ class latipayonlinebank
         $status = $_POST['status'];
         $currency = $_POST['currency'];
         $amount = $_POST['amount'];
-        $api_key = $payment['latipaywechat_key'];
+        $api_key = $payment['latipayonlinebank_key'];
 
         $signature_string = $order_latipayId . $payment_method . $status . $currency . $amount;
         $signature = hash_hmac('sha256', $signature_string, $api_key);
