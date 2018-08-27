@@ -10,11 +10,13 @@ class Callback extends \Magento5\Latipay\Controller\LatipayAbstract
         try {
             $paymentMethod = $this->getPaymentMethod();
             $params = $this->getRequest()->getParams();
+
             if ($paymentMethod->validateResponse($params)) {
-                $order = $this->getOrder();
+                $order = $this->getOrderById($params['merchant_reference']);
                 $payment = $order->getPayment();
+
                 $paymentMethod->postProcessing($order, $payment, $params);
-                die('success');
+                die('sent');
             } else {
                 //$this->messageManager->addErrorMessage(__('Payment failed. Please try again or choose a different payment method'));
             }

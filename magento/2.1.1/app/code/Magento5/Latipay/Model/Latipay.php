@@ -205,6 +205,7 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $transactionUrl = $this->getTransactionUrl();
         $orderData = json_encode($this->getOrderData());
+
         return $this->helper->callApi($transactionUrl, $orderData);
     }
 
@@ -236,6 +237,16 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
             $data['present_qr'] = 1;
         }
 
+        if ($data['payment_method'] == 'alipay') {
+            $is_spotpay = $this->getConfigData('is_spotpay');
+            if ($is_spotpay && $is_spotpay == 1) {
+                $data['is_spotpay'] = 1;
+                $data['present_qr'] = 1;
+            }
+        }
+
+        $data['backPage_url'] = $this->getRedirectUrl();
+
         return $data;
     }
 
@@ -264,12 +275,19 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
                 }
             }
         }
+
         if (!isset($wallet) or empty($wallet)) {
             $wallet = 'Wechat,Alipay';
         }
         $wallet = explode(',', $wallet);
+
         $return = '';
         foreach ($wallet as $k=>$v) {
+
+            if(!$v || $v == 'Latipay') {
+                continue;
+            }
+
             $checked = '';
             if ($k == 0) {
                 $checked = 'checked="checked"';
