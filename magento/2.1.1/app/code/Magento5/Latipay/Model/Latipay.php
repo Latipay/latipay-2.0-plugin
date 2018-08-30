@@ -284,7 +284,7 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         $return = '';
         foreach ($wallet as $k=>$v) {
 
-            if(!$v || $v == 'Latipay') {
+            if(!$v) {
                 continue;
             }
 
@@ -317,9 +317,14 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
     public function postProcessing(\Magento\Sales\Model\Order $order,
                                    \Magento\Framework\DataObject $payment, $response)
     {
+        if ($order->getStatus() == $order::STATE_PROCESSING) {
+            return;
+        }
+
         if (!empty($response['order_id'])) {
             $payment->setTransactionId($response['order_id']);
         }
+
         foreach ($this->_transactionDetailKeys as $key) {
             isset($response[$key]) and $payment->setTransactionAdditionalInfo($key, $response[$key]);
         }
