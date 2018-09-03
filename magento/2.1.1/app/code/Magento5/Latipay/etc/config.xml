@@ -17,6 +17,7 @@
                 <wallet_id backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <user_id backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <is_spotpay>0</is_spotpay>
             </latipay>
         </payment>
     </default>
