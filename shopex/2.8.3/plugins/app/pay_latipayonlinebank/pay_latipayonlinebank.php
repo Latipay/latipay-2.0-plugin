@@ -52,7 +52,7 @@ class pay_latipayonlinebank extends paymentPlugin{
 
 			$url = $host_url."/".$nonce;
 			//进入支付
-			header( "Location: $url");exit;
+			header( "Location: {$url}");exit;
 		}else{
 			echo $resp['message'];exit;
 		}
