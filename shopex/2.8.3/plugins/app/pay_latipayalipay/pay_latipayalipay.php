@@ -40,8 +40,7 @@ class pay_latipayalipay extends paymentPlugin{
 		$signature = hash_hmac('sha256', $mac, $api_key);
 		$params["signature"] = $signature;
 
-		//$response = $this->curl("https://api.latipay.net/v2/transaction", json_encode($params));
-		$response = $this->curl("https://api-staging.latipay.net/v2/transaction", json_encode($params));
+		$response = $this->curl("https://api.latipay.net/v2/transaction", json_encode($params));
 
 		//print_r($response);exit;
 
