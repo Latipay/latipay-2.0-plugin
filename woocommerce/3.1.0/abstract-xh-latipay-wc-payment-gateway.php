@@ -98,7 +98,7 @@ abstract class Abstract_XH_Latipay_Payment_Gateway extends WC_Payment_Gateway{
         $total_amount     = round($order->get_total(),2);
         $gateway = "https://api.latipay.net/v2";
         $url_return = $this->get_return_url($order);
-        $url_notify = home_url('/');
+        $url_notify = $this->get_return_url($order);
         $currency =get_woocommerce_currency();
         $supported_currencies = array('NZD','CNY','AUD');
         if (!in_array($currency, $supported_currencies)) {
@@ -132,6 +132,7 @@ abstract class Abstract_XH_Latipay_Payment_Gateway extends WC_Payment_Gateway{
             'payment_method' => $payment_method, // wechat, alipay, onlineBank
             'present_qr' => '1', // wechat
             'signature' => $signature,
+            'backPage_url'=> $order->get_cancel_order_url(),
         );
         
         if ($payment_method == 'alipay') {
