@@ -195,8 +195,8 @@ add_action('init', function(){
     $payment_method = $post_data['payment_method'];
     $status = $post_data['status'];
     $currency = $post_data['currency'];
-    $amount = number_format($post_data['amount'], 2);
-    
+    $amount = $post_data['amount'];
+
     $signature_string = $orderId . $payment_method . $status . $currency . $amount;
     $signature = hash_hmac('sha256', $signature_string, $api_key);
     if ($signature != $post_data['signature']){
