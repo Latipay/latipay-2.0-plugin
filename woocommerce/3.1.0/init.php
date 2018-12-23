@@ -206,6 +206,9 @@ add_action('init', function(){
     $order = new WC_Order($orderId);
     if($status == "paid"){
         $order->payment_complete(isset($post_data['transaction_id'])?$post_data['transaction_id']:null);
+        if (isset($_POST['merchant_reference']) && isset($_POST['status'])) {
+            die('sent');
+        }
     }
     return;
 });
