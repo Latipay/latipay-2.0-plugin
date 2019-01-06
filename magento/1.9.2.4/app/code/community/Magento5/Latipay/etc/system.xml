@@ -33,7 +33,7 @@
                         <transaction_url translate="label">
                             <label>Transaction URL</label>
                             <comment>
-                                <![CDATA[ https://api-staging.latipay.net/v2/transaction<br />
+                                <![CDATA[ https://api.latipay.net/v2/transaction<br />
                                 https://api.latipay.net/v2/transaction]]>
                             </comment>
                             <frontend_type>text</frontend_type>
