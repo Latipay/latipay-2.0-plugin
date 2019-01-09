@@ -108,6 +108,17 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>10</sort_order>
                         </is_spotpay>
+                        <is_debug translate="label">
+                            <label>is_debug</label>
+                            <comment>
+                                <![CDATA[do not change, unless you’ve been told to..<br />]]>
+                            </comment>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>11</sort_order>
+                        </is_debug>
                     </fields>
                 </latipay>
             </groups>

@@ -134,4 +134,27 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
         return $this->getResponse()->setRedirect(Mage::getUrl('checkout/onepage'));
     }
 
+    public function debugInfoAction() {
+
+        $is_debug = Mage::getStoreConfig('payment/latipay/is_debug');
+        if ($is_debug && $is_debug == 1) {
+            echo '<br>';
+            $info = Mage::getStoreConfig('payment/latipay');
+            echo 'Latipay config :';
+            echo '<br><br>';
+            echo json_encode($info) . PHP_EOL;
+            echo '<br><br>';
+
+            $info = json_encode(Mage::getConfig()->getNode('modules')->children()->Magento5_Latipay->version);
+            $version = json_decode($info, true)[0];
+            echo 'Latipay version : ' . $version . PHP_EOL;
+            echo '<br>';
+
+            echo '<br>';
+            echo phpinfo();
+        } else {
+            die('access denied');
+        }
+    }
+
 }
