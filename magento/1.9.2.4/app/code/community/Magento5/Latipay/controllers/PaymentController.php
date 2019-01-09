@@ -134,8 +134,8 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
         return $this->getResponse()->setRedirect(Mage::getUrl('checkout/onepage'));
     }
 
-    public function debugInfoAction() {
-
+    public function debugInfoAction()
+    {
         $is_debug = Mage::getStoreConfig('payment/latipay/is_debug');
         if ($is_debug && $is_debug == 1) {
             echo '<br>';
