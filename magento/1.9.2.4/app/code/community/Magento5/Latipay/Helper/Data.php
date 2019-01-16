@@ -57,7 +57,7 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
         $data['user_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/user_id'));
         $data['wallet_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/wallet_id'));
         $data['amount'] = $order->getBaseGrandTotal();
-        $data['payment_method'] = $order->getPayment()->getLatipayMethod()?$order->getPayment()->getLatipayMethod():'wechat';
+        $data['payment_method'] = $order->getPayment()->getLatipayMethod() ? $order->getPayment()->getLatipayMethod() : 'wechat';
         $data['return_url'] = Mage::getUrl('latipay/payment/return', array('_secure' => true));
         $data['callback_url'] = Mage::getUrl('latipay/payment/callback', array('_secure' => true));
 

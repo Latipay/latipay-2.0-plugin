@@ -79,12 +79,12 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
                 $order->addStatusHistoryComment(Mage::helper('core')->__('Payment successful'), false)->setIsCustomerNotified(false);
 
                 try {
-                    $state  = Mage_Sales_Model_Order::STATE_PROCESSING;
+                    $state = Mage_Sales_Model_Order::STATE_PROCESSING;
                     $status = true;
                     $order->setState($state, $status);
                     $order->save();
                     Mage::getSingleton('checkout/session')->unsQuoteId();
-                    
+
                     if ($type == 'return') {
                         $this->_redirect('checkout/onepage/success', array('_secure' => false));
                     } else {
@@ -109,25 +109,17 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
         }
 
     }
-    
+
     public function cancelAction()
     {
         $session = Mage::getSingleton('checkout/session');
-        if ($session->getLastRealOrderId())
-        {
+        if ($session->getLastRealOrderId()) {
             $order = Mage::getModel('sales/order')->loadByIncrementId($session->getLastRealOrderId());
-            if ($order->getId())
-            {
-                //Cancel order
-                //if ($order->getState() != Mage_Sales_Model_Order::STATE_CANCELED)
-                //{
-                //    $order->registerCancellation("Canceled by Payment Provider")->save();
-                //}
+            if ($order->getId()) {
                 $quote = Mage::getModel('sales/quote')
                     ->load($order->getQuoteId());
                 //Return quote
-                if ($quote->getId())
-                {
+                if ($quote->getId()) {
                     $quote->setIsActive(1)
                         ->setReservedOrderId(NULL)
                         ->save();
@@ -139,7 +131,30 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
             }
         }
 
-        return $this->getResponse()->setRedirect( Mage::getUrl('checkout/onepage'));
+        return $this->getResponse()->setRedirect(Mage::getUrl('checkout/onepage'));
+    }
+
+    public function debugInfoAction()
+    {
+        $is_debug = Mage::getStoreConfig('payment/latipay/is_debug');
+        if ($is_debug && $is_debug == 1) {
+            echo '<br>';
+            $info = Mage::getStoreConfig('payment/latipay');
+            echo 'Latipay config :';
+            echo '<br><br>';
+            echo json_encode($info) . PHP_EOL;
+            echo '<br><br>';
+
+            $info = json_encode(Mage::getConfig()->getNode('modules')->children()->Magento5_Latipay->version);
+            $version = json_decode($info, true)[0];
+            echo 'Latipay version : ' . $version . PHP_EOL;
+            echo '<br>';
+
+            echo '<br>';
+            echo phpinfo();
+        } else {
+            die('access denied');
+        }
     }
 
 }
