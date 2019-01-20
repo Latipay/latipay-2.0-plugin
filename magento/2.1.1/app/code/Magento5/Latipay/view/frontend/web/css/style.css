@@ -1,6 +1,6 @@
 .payment-method-title .label .latipay-title:after {
     content: "";
-    width: 72px;
+    width: 82px;
     height: 41px;
     background: url(../images/logo.svg) no-repeat;
     display: table-cell;

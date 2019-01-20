@@ -7,20 +7,21 @@ use Magento\Framework\Escaper;
 class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
 {
     protected $methodCode = \Magento5\Latipay\Model\Latipay::PAYMENT_LATIPAY_CODE;
-    
-    
+
+
     protected $method;
 
     /**
      * @var Escaper
      */
     protected $escaper;
-    
+
 
     public function __construct(
         \Magento\Payment\Helper\Data $paymenthelper,
         Escaper $escaper
-    ) {
+    )
+    {
         $this->method = $paymenthelper->getMethodInstance($this->methodCode);
         $this->escaper = $escaper;
     }

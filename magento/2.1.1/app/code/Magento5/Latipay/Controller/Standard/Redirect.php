@@ -2,14 +2,16 @@
 
 namespace Magento5\Latipay\Controller\Standard;
 
-class Redirect extends \Magento5\Latipay\Controller\LatipayAbstract {
+class Redirect extends \Magento5\Latipay\Controller\LatipayAbstract
+{
 
-    public function execute() {
+    public function execute()
+    {
         if (!$this->getRequest()->isAjax()) {
             $this->_cancelPayment();
             $this->_checkoutSession->restoreQuote();
             $this->getResponse()->setRedirect(
-                    $this->getCheckoutHelper()->getUrl('checkout')
+                $this->getCheckoutHelper()->getUrl('checkout')
             );
         }
 

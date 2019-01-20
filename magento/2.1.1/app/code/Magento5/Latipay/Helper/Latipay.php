@@ -1,4 +1,5 @@
 <?php
+
 namespace Magento5\Latipay\Helper;
 
 use Magento\Framework\App\Helper\Context;
@@ -18,7 +19,8 @@ class Latipay extends AbstractHelper
         \Magento\Checkout\Model\Session $session,
         \Magento\Quote\Model\Quote $quote,
         \Magento\Quote\Model\QuoteManagement $quoteManagement
-    ) {
+    )
+    {
         $this->session = $session;
         $this->quote = $quote;
         $this->quoteManagement = $quoteManagement;
