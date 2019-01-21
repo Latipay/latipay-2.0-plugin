@@ -1,4 +1,5 @@
 <?php
+
 namespace Magento5\Latipay\Controller;
 
 abstract class LatipayAbstract extends \Magento\Framework\App\Action\Action
@@ -22,7 +23,7 @@ abstract class LatipayAbstract extends \Magento\Framework\App\Action\Action
      * @var \Magento\Quote\Api\CartRepositoryInterface
      */
     protected $quoteRepository;
-    
+
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -54,7 +55,6 @@ abstract class LatipayAbstract extends \Magento\Framework\App\Action\Action
     protected $resultJsonFactory;
 
 
-  
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Customer\Model\Session $customerSession,
@@ -66,7 +66,8 @@ abstract class LatipayAbstract extends \Magento\Framework\App\Action\Action
         \Magento5\Latipay\Helper\Latipay $checkoutHelper,
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
-    ) {
+    )
+    {
         $this->_customerSession = $customerSession;
         $this->_checkoutSession = $checkoutSession;
         $this->quoteRepository = $quoteRepository;

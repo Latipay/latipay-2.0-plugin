@@ -1,4 +1,5 @@
 <?php
+
 namespace Magento5\Latipay\Model;
 
 class Session extends \Magento\Checkout\Model\Session

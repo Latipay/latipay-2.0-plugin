@@ -17,14 +17,11 @@ class Callback extends \Magento5\Latipay\Controller\LatipayAbstract
 
                 $paymentMethod->postProcessing($order, $payment, $params);
                 die('sent');
-            } else {
-                //$this->messageManager->addErrorMessage(__('Payment failed. Please try again or choose a different payment method'));
             }
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            //$this->messageManager->addExceptionMessage($e, $e->getMessage());
         } catch (\Exception $e) {
-            //$this->messageManager->addExceptionMessage($e, __('We can\'t place the order.'));
+            die('error');
         }
+        
         die('fail');
     }
 

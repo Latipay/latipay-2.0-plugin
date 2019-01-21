@@ -108,7 +108,8 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Eav\Api\AttributeSetRepositoryInterface $attributeSet,
         \Magento\Store\Model\StoreManagerInterface $storeManager
 
-    ) {
+    )
+    {
         $this->helper = $helper;
         $this->orderSender = $orderSender;
         $this->httpClientFactory = $httpClientFactory;
@@ -282,9 +283,9 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         $wallet = explode(',', $wallet);
 
         $return = '';
-        foreach ($wallet as $k=>$v) {
+        foreach ($wallet as $k => $v) {
 
-            if(!$v) {
+            if (!$v) {
                 continue;
             }
 
@@ -352,5 +353,9 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
 
         $order->addStatusHistoryComment(__("Latipay Response : %1", json_encode($response)));
         $order->save();
+    }
+
+    public function getDebugInfo() {
+        return $this->getConfigData('is_debug');
     }
 }
