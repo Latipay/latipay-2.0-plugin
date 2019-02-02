@@ -90,5 +90,5 @@ if ($signature == $_GET['signature']) {
         die('error status');
     }
 } else {
-    die('access denied');
+    die('Transaction: Signature Fails!');
 }
