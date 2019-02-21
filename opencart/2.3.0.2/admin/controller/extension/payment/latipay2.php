@@ -6,22 +6,13 @@ class ControllerExtensionPaymentLatipay2 extends Controller
 
     public function index()
     {
-
-
-        //给数据添加字段,用于邮件发送使用
         $sql = $this->db->query("Describe `" . DB_PREFIX . "order` `if_email_latipay2`");
-        if ($sql->num_rows) {
-            //echo "you";
-        } else {
-            //echo 'no';
+        if (!$sql->num_rows) {
             $this->db->query("ALTER TABLE `" . DB_PREFIX . "order` ADD `if_email_latipay2` TINYINT NOT NULL ");
         }
 
-
         $this->load->language('extension/payment/latipay2');
-
         $this->document->setTitle($this->language->get('heading_title'));
-
         $this->load->model('setting/setting');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
