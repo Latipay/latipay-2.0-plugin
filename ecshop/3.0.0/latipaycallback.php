@@ -15,11 +15,15 @@ if ($_POST['payment_method'] == 'onlineBank') {
     $pay_code = 'latipayonlinebank';
 }
 
+if (!$pay_code) {
+    die('access denied');
+}
+
 /* 判断是否启用 */
 $sql = "SELECT * FROM " . $ecs->table('payment') . " WHERE pay_code = '$pay_code' AND enabled = 1";
 $payment_info = $db->getRow($sql);
 if (!isset($payment_info['pay_id']) || !isset($payment_info['pay_config'])) {
-    echo 'error';
+    die('pay config error');
 } else {
     $plugin_file = 'includes/modules/payment/' . $pay_code . '.php';
 
@@ -29,17 +33,14 @@ if (!isset($payment_info['pay_id']) || !isset($payment_info['pay_config'])) {
         include_once($plugin_file);
 
         $payment = new $pay_code();
-
-        //取得支付信息，生成支付代码
         $paymentConfig = unserialize_config($payment_info['pay_config']);
-
         $msg = (@$payment->callback_confirm($paymentConfig)) ? 'sent' : 'error';
 
     } else {
         $msg = $_LANG['pay_not_exist'];
     }
 
-    echo $msg;
+    die($msg);
 }
 
 ?>
