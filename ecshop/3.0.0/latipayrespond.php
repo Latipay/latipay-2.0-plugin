@@ -1,14 +1,6 @@
 <?php
-/*
- * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
- * 网站地址: http://www.ecshop.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
- * 
- * 
+/**
+ * Latipay V2
  */
 define('IN_ECS', true);
 
@@ -26,6 +18,10 @@ if ($_GET['payment_method'] == 'onlineBank') {
     $pay_code = 'latipayonlinebank';
 }
 
+if (!$pay_code) {
+    die('payment method error');
+}
+
 /* 判断是否启用 */
 $sql = "SELECT * FROM " . $ecs->table('payment') . " WHERE pay_code = '$pay_code' AND enabled = 1";
 $payment_info = $db->getRow($sql);
@@ -40,10 +36,7 @@ if (!isset($payment_info['pay_id']) || !isset($payment_info['pay_config'])) {
         include_once($plugin_file);
 
         $payment = new $pay_code();
-
-        //取得支付信息，生成支付代码
         $paymentConfig = unserialize_config($payment_info['pay_config']);
-
         $msg = (@$payment->respond($paymentConfig)) ? $_LANG['pay_success'] : $_LANG['pay_fail'];
     } else {
         $msg = $_LANG['pay_not_exist'];

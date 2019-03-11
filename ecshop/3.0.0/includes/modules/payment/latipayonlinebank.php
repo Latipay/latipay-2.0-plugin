@@ -1,12 +1,6 @@
 <?php
-/* Latipay支付插件
- * ============================================================================
- * *
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
- * $Id: latipay.php $
+/**
+ * Latipay V2
  */
 
 if (!defined('IN_ECS')) {
@@ -14,10 +8,8 @@ if (!defined('IN_ECS')) {
 }
 
 $payment_lang = ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/payment/latipayonlinebank.php';
-
 if (file_exists($payment_lang)) {
     global $_LANG;
-
     include_once($payment_lang);
 }
 
@@ -44,7 +36,7 @@ if (isset($set_modules) && $set_modules == TRUE) {
     $modules[$i]['website'] = 'https://www.latipay.net/';
 
     /* 版本号 */
-    $modules[$i]['version'] = '2.0.0';
+    $modules[$i]['version'] = '2.0.1';
 
     /* 配置信息 */
     $modules[$i]['config'] = array(
@@ -111,7 +103,7 @@ class latipayonlinebank
         $toSubmit['return_url'] = $root . "latipayrespond.php";
         //return_url
         $toSubmit['callback_url'] = $root . "latipaycallback.php";
-        //后台回调地址
+        //callback_url
 
         $sign = '';
         foreach ($toSubmit as $key => $value) {
