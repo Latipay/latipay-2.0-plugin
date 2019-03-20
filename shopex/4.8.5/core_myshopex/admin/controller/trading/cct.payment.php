@@ -9,11 +9,10 @@ class cct_payment extends ctl_payment {
         $client->url = SDS_API;
 
         //$payment = $client->native_svc("payment.get_all_payments");
-
-        if($payment['result'] == 'succ'){
-            $allApp = $appmgr->getPaydata($payment['result_msg']);
-            file_put_contents(HOME_DIR.'/sendtmp/allApp.log',serialize($allApp));
-        }
+        //if($payment['result'] == 'succ'){
+        //    $allApp = $appmgr->getPaydata($payment['result_msg']);
+        //    file_put_contents(HOME_DIR.'/sendtmp/allApp.log',serialize($allApp));
+        //}
 
         $allApp = file_exists(HOME_DIR.'/sendtmp/allApp.log')
                 ? file_get_contents(HOME_DIR.'/sendtmp/allApp.log')

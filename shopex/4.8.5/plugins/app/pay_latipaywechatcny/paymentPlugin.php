@@ -1,35 +1,36 @@
 <?php
-function payCallBack($return){
+function payCallBack($return)
+{
 
-    require(dirname(__FILE__).'/../../loader.php');
+    require(dirname(__FILE__) . '/../../loader.php');
     $oPay = &$system->loadModel('trading/payment');
     $file = basename($_SERVER["PHP_SELF"]);
-    $fileArr = explode('_',$file);
-    $fileArrs = explode('.',$fileArr[1]);
+    $fileArr = explode('_', $file);
+    $fileArrs = explode('.', $fileArr[1]);
     $gateWayId = $fileArrs[0];
 
-//    $o = $oPay->loadMethod($gateWayId);
-    $serverCall = preg_match("/^pay\_([^\.]+)\.server\.php$/i",$file,$matches)?$matches[1]:false;
-    if($serverCall){//��Ҫ��server.php����
-        require('pay_'.$gateWayId.'.server.php');
-        $func_name="pay_".$serverCall."_callback";//���?��
-        $className="pay_".$serverCall;
-        $o=new $className($system);
+    $serverCall = preg_match("/^pay\_([^\.]+)\.server\.php$/i", $file, $matches) ? $matches[1] : false;
+    if ($serverCall) {
+        require('pay_' . $gateWayId . '.server.php');
+        $func_name = "pay_" . $serverCall . "_callback";
+        $className = "pay_" . $serverCall;
+        $o = new $className($system);
         //$status = $func_name($return,$paymentId,$tradeno);
-        $status = $o->$func_name($return,$paymentId,$money,$message,$tradeno);
-        $info =  array('money'=>$money,'memo'=>$message,'trade_no'=>$tradeno);
-        $result = $oPay->setPayStatus($paymentId,$status,$info);    //���Դ���֧����������Ϣ������ԭ��
-    }else{
-        require('pay_'.$gateWayId.'.php');
+        $status = $o->$func_name($return, $paymentId, $money, $message, $tradeno);
+        $info = array('money' => $money, 'memo' => $message, 'trade_no' => $tradeno);
+        $result = $oPay->setPayStatus($paymentId, $status, $info);
+    } else {
+        require('pay_' . $gateWayId . '.php');
         $money = null;
         $status = null;
-        $className = 'pay_'.$gateWayId;
+        $className = 'pay_' . $gateWayId;
         $o = new $className($system);
 
-        $status = $o->callback($return,$paymentId,$money,$message,$tradeno);
-        $result = $oPay->progress($paymentId,$status,array('money'=>$money,'memo'=>$message,'trade_no'=>$tradeno));
+        $status = $o->callback($return, $paymentId, $money, $message, $tradeno);
+        $result = $oPay->progress($paymentId, $status, array('money' => $money, 'memo' => $message, 'trade_no' => $tradeno));
     }
 }
-payCallBack(array_merge($_GET,$_POST));
+
+payCallBack(array_merge($_GET, $_POST));
 exit();
 ?>
