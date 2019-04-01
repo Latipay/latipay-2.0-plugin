@@ -1,7 +1,10 @@
 <?php
-include_once CORE_DIR.'/admin/controller/trading/ctl.payment.php';
-class cct_payment extends ctl_payment {
-	function index(){
+include_once CORE_DIR . '/admin/controller/trading/ctl.payment.php';
+
+class cct_payment extends ctl_payment
+{
+    function index()
+    {
         $appmgr = &$this->system->loadModel('system/appmgr');
         $client = &$this->system->loadModel('service/apiclient');
 
@@ -9,22 +12,22 @@ class cct_payment extends ctl_payment {
         $client->url = SDS_API;
 
         //$payment = $client->native_svc("payment.get_all_payments");
-
-        if($payment['result'] == 'succ'){
+        /*
+        if ($payment['result'] == 'succ') {
             $allApp = $appmgr->getPaydata($payment['result_msg']);
-            file_put_contents(HOME_DIR.'/sendtmp/allApp.log',serialize($allApp));
-        }
+            file_put_contents(HOME_DIR . '/sendtmp/allApp.log', serialize($allApp));
+        }*/
 
-        $allApp = file_exists(HOME_DIR.'/sendtmp/allApp.log')
-                ? file_get_contents(HOME_DIR.'/sendtmp/allApp.log')
-                : file_get_contents(HOME_DIR.'/sendtmp/defaultApp.log');
+        $allApp = file_exists(HOME_DIR . '/sendtmp/allApp.log')
+            ? file_get_contents(HOME_DIR . '/sendtmp/allApp.log')
+            : file_get_contents(HOME_DIR . '/sendtmp/defaultApp.log');
         $allApp = unserialize($allApp);
-        if ( !$allApp ) unset($allApp);
+        if (!$allApp) unset($allApp);
 
-        $useApp = file_exists(HOME_DIR.'/sendtmp/useApp.log')
-                ? file_get_contents(HOME_DIR.'/sendtmp/useApp.log') : '';
+        $useApp = file_exists(HOME_DIR . '/sendtmp/useApp.log')
+            ? file_get_contents(HOME_DIR . '/sendtmp/useApp.log') : '';
         $useApp = unserialize($useApp);
-        if ( !$useApp ) unset($useApp);
+        if (!$useApp) unset($useApp);
         $allApp[] = $this->getcard($allApp);
         $this->getcarduse($useApp);
 
@@ -35,7 +38,8 @@ class cct_payment extends ctl_payment {
         $this->page('payment/pay_index.html');
     }
 
-    function getcard(&$allApp){
+    function getcard(&$allApp)
+    {
         $allApp[] = array(
             'pay_id' => '99',
             'pay_name' => 'LatiPay',
@@ -53,7 +57,7 @@ class cct_payment extends ctl_payment {
             'disable' => false,
             'count' => 1,
         );
-		$allApp[] = array(
+        $allApp[] = array(
             'pay_id' => '99',
             'pay_name' => 'LatiPay_Alipay',
             'pay_ident' => 'pay_latipayalipay',
@@ -70,7 +74,7 @@ class cct_payment extends ctl_payment {
             'disable' => false,
             'count' => 1,
         );
-		$allApp[] = array(
+        $allApp[] = array(
             'pay_id' => '99',
             'pay_name' => 'LatiPay_WeChat',
             'pay_ident' => 'pay_latipaywechat',
@@ -88,7 +92,7 @@ class cct_payment extends ctl_payment {
             'count' => 1,
         );
 
-		$allApp[] = array(
+        $allApp[] = array(
             'pay_id' => '99',
             'pay_name' => 'LatiPay_OnlineBank',
             'pay_ident' => 'pay_latipayonlinebank',
@@ -106,7 +110,7 @@ class cct_payment extends ctl_payment {
             'count' => 1,
         );
 
-		$allApp[] = array(
+        $allApp[] = array(
             'pay_id' => '99',
             'pay_name' => 'LatiPay_Alipay_CNY',
             'pay_ident' => 'pay_latipayalipaycny',
@@ -123,7 +127,7 @@ class cct_payment extends ctl_payment {
             'disable' => false,
             'count' => 1,
         );
-		$allApp[] = array(
+        $allApp[] = array(
             'pay_id' => '99',
             'pay_name' => 'LatiPay_WeChat_CNY',
             'pay_ident' => 'pay_latipaywechatcny',
@@ -143,10 +147,11 @@ class cct_payment extends ctl_payment {
         return $allApp;
     }
 
-    function getcarduse(&$useApp){
+    function getcarduse(&$useApp)
+    {
         $oPay = &$this->system->loadModel('trading/payment');
         $row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipay'");
-        if($row){
+        if ($row) {
             $useApp[] = array(
                 'pay_id' => '99',
                 'pay_name' => 'LatiPay',
@@ -168,8 +173,8 @@ class cct_payment extends ctl_payment {
             );
         }
 
-		$row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipayalipay'");
-        if($row){
+        $row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipayalipay'");
+        if ($row) {
             $useApp[] = array(
                 'pay_id' => '99',
                 'pay_name' => 'LatiPay_Alipay',
@@ -191,8 +196,8 @@ class cct_payment extends ctl_payment {
             );
         }
 
-		$row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipaywechat'");
-        if($row){
+        $row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipaywechat'");
+        if ($row) {
             $useApp[] = array(
                 'pay_id' => '99',
                 'pay_name' => 'LatiPay_WeChat',
@@ -214,8 +219,8 @@ class cct_payment extends ctl_payment {
             );
         }
 
-		$row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipayonlinebank'");
-        if($row){
+        $row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipayonlinebank'");
+        if ($row) {
             $useApp[] = array(
                 'pay_id' => '99',
                 'pay_name' => 'LatiPay_OnlineBank',
@@ -237,8 +242,8 @@ class cct_payment extends ctl_payment {
             );
         }
 
-		$row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipayalipaycny'");
-        if($row){
+        $row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipayalipaycny'");
+        if ($row) {
             $useApp[] = array(
                 'pay_id' => '99',
                 'pay_name' => 'LatiPay_Alipay_CNY',
@@ -260,8 +265,8 @@ class cct_payment extends ctl_payment {
             );
         }
 
-		$row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipaywechatcny'");
-        if($row){
+        $row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipaywechatcny'");
+        if ($row) {
             $useApp[] = array(
                 'pay_id' => '99',
                 'pay_name' => 'LatiPay_WeChat_CNY',
@@ -284,40 +289,41 @@ class cct_payment extends ctl_payment {
         }
     }
 
-    function install_app($ident){
+    function install_app($ident)
+    {
         $appmgr = $this->system->loadModel('system/appmgr');
         $refesh = &$this->system->loadModel('system/addons');
         $payment = $this->system->loadModel('trading/payment');
-        if($appmgr->install($ident,false)){
-            $allApp = file_exists(HOME_DIR.'/sendtmp/allApp.log')
-                ? file_get_contents(HOME_DIR.'/sendtmp/allApp.log')
-                : file_get_contents(HOME_DIR.'/sendtmp/defaultApp.log');
+        if ($appmgr->install($ident, false)) {
+            $allApp = file_exists(HOME_DIR . '/sendtmp/allApp.log')
+                ? file_get_contents(HOME_DIR . '/sendtmp/allApp.log')
+                : file_get_contents(HOME_DIR . '/sendtmp/defaultApp.log');
             $allApp = unserialize($allApp);
 
-            $useApp = file_exists(HOME_DIR.'/sendtmp/useApp.log')
-                ? file_get_contents(HOME_DIR.'/sendtmp/useApp.log')
+            $useApp = file_exists(HOME_DIR . '/sendtmp/useApp.log')
+                ? file_get_contents(HOME_DIR . '/sendtmp/useApp.log')
                 : '';
             $useApp = unserialize($useApp);
 
-            foreach( $useApp as $v ) {
+            foreach ($useApp as $v) {
                 $useApp_[$v['pay_ident']] = $v['pay_ident'];
             }
 
-            foreach($allApp as $key=>$val){
-                if( !isset($useApp_[$ident]) && $val['pay_ident'] == $ident){
+            foreach ($allApp as $key => $val) {
+                if (!isset($useApp_[$ident]) && $val['pay_ident'] == $ident) {
                     $val['disabled'] = 'true';
                     $useApp[] = $val;
                 }
             }
 
-            file_put_contents(HOME_DIR.'/sendtmp/useApp.log',serialize($useApp));
+            file_put_contents(HOME_DIR . '/sendtmp/useApp.log', serialize($useApp));
 
-            if(!$_SESSION['updatePayment']){
+            if (!$_SESSION['updatePayment']) {
                 $plugin = $appmgr->getAppName($ident);
                 $data['custom_name'] = $plugin['plugin_name'];
-                $data['pay_type'] = substr($ident,4);
+                $data['pay_type'] = substr($ident, 4);
                 $data['disabled'] = 'true';
-                
+
                 $payment->insertPaymentApp($data, $err);
             }
 
@@ -325,37 +331,37 @@ class cct_payment extends ctl_payment {
 
             $this->clear_all_cache();
 
-            echo'<script>W.page(\'index.php?ctl=trading/payment&act=index\',{onComplete:function(){$(\'main\').setStyle(\'width\',window.mainwidth);}})</script>';
-        }else{
-            $this->end(false,'安装失败');
+            echo '<script>W.page(\'index.php?ctl=trading/payment&act=index\',{onComplete:function(){$(\'main\').setStyle(\'width\',window.mainwidth);}})</script>';
+        } else {
+            $this->end(false, '安装失败');
         }
     }
 
-    function deletePayment($ident){        
+    function deletePayment($ident)
+    {
         $this->begin('index.php?ctl=trading/payment&act=index');
         // 中心登记
-        $this->sendRequestAsync($ident,'delete');
+        $this->sendRequestAsync($ident, 'delete');
         // 本地删除
-        $this->deletePaymentDb($ident);        
+        $this->deletePaymentDb($ident);
         // 删除目录
         //!is_dir(PLUGIN_DIR."/app/".$ident) || deleteDir(PLUGIN_DIR."/app/".$ident);
         $this->clear_all_cache();
-        $this->end(true,'操作成功');
+        $this->end(true, '操作成功');
     }
 
-    function deletePaymentDb($ident){
+    function deletePaymentDb($ident)
+    {
         $oPayment = $this->system->loadModel('trading/payment');
-        if($c = unserialize( file_get_contents( HOME_DIR."/sendtmp/useApp.log"))){
-            foreach ( $c as $k => $v )
-            {
-                            if ( $ident == $v['pay_ident'] )
-                            {
-                                            unset( $c[$k] );
-                            }
+        if ($c = unserialize(file_get_contents(HOME_DIR . "/sendtmp/useApp.log"))) {
+            foreach ($c as $k => $v) {
+                if ($ident == $v['pay_ident']) {
+                    unset($c[$k]);
+                }
             }
-            file_put_contents( HOME_DIR."/sendtmp/useApp.log", serialize( $c ) );
+            file_put_contents(HOME_DIR . "/sendtmp/useApp.log", serialize($c));
         }
-        $oPayment->db->exec( "UPDATE sdb_payment_cfg SET disabled=\"true\" WHERE pay_type =".$this->db->quote( substr( $ident, 4 ) ) );
+        $oPayment->db->exec("UPDATE sdb_payment_cfg SET disabled=\"true\" WHERE pay_type =" . $this->db->quote(substr($ident, 4)));
         //$oPayment->db->exec( "DELETE FROM sdb_plugins WHERE plugin_package=".$this->db->quote( $ident ) );
         return TRUE;
     }
