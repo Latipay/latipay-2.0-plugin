@@ -4,14 +4,15 @@
 </div>
 <?php else : ?>
 <div class="well well-sm">
-  <?php echo $text_payment_method; ?>
-  <select class="form-control" id="payment_method2" name="payment_method2">
-  		<?php
-        	foreach($select_array as $one){
-        ?>
-        <option value="<?php echo $one['value'];?>"><?php echo $one['name'];?></option>
-        <?php } ?>
-    </select>
+    <p><?php echo $text_payment_method; ?></p>
+    <?php
+        foreach($select_array as $one){
+    ?>
+    <p style="margin-left:10px;">
+        <input type="radio" name="payment_method2" value="<?php echo $one['value'];?>" style="margin-right:10px;">
+        <?php echo $one['name'];?>
+    </p>
+    <?php } ?>
 </div>
 <div class="buttons">
   <div class="pull-right">
@@ -20,12 +21,18 @@
 </div>
 <script type="text/javascript"><!--
 $('#button-confirm').on('click', function() {
+    var payment_method2 = $('input[name="payment_method2"]:checked').val();
+    if (payment_method2 == null || payment_method2 == undefined) {
+        alert('Please select the payment method !');
+        return;
+    }
+
 	$.ajax({
 		type: 'post',
 		dataType: 'json',
 		url: 'index.php?route=payment/latipay2/confirm',
 		cache: false,
-		data: 'payment_method=' + $('#payment_method2').val(),
+		data: 'payment_method=' + payment_method2,
 		beforeSend: function() {
 			$('#button-confirm').button('loading');
 		},

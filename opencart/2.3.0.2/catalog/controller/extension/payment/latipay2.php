@@ -71,6 +71,10 @@ class ControllerExtensionPaymentLatipay2 extends Controller
         $walletList = explode(',', $wallet);
         $select_array = array();
         foreach ($walletList as $key => $value) {
+            if (strtolower($value) == 'latipay') {
+                continue;
+            }
+
             $select_array[] = array(
                 'name' => $value,
                 'value' => strtolower($value),
