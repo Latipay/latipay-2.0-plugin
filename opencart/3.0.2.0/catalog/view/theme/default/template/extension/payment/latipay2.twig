@@ -4,12 +4,13 @@
 </div>
 {% else %}
 <div class="well well-sm">
-  {{ text_payment_method }}
-  <select class="form-control" id="payment_method2" name="payment_method2">
-  		{% for one in select_array %}
-        <option value="{{ one.value }}">{{ one.value }}</option>
-        {% endfor %}
-    </select>
+	<p>{{ text_payment_method }}</p>
+    {% for one in select_array %}
+		<p style="margin-left:10px;">
+			<input type="radio" name="payment_method2" value="{{ one.value }}" style="margin-right:10px;">
+            {{ one.name }}
+		</p>
+    {% endfor %}
 </div>
 <div class="buttons">
   <div class="pull-right">
@@ -18,12 +19,17 @@
 </div>
 <script type="text/javascript"><!--
 $('#button-confirm').on('click', function() {
+    var payment_method2 = $('input[name="payment_method2"]:checked').val();
+    if (payment_method2 == null || payment_method2 == undefined) {
+        alert('Please select the payment method !');
+        return;
+    }
 	$.ajax({
 		type: 'post',
 		dataType: 'json',
 		url: 'index.php?route=extension/payment/latipay2/confirm',
 		cache: false,
-		data: 'payment_method=' + $('#payment_method2').val(),
+		data: 'payment_method=' + payment_method2,
 		beforeSend: function() {
 			$('#button-confirm').button('loading');
 		},
