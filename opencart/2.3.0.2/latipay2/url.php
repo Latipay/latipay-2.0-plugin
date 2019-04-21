@@ -48,24 +48,23 @@ foreach ($query->rows as $result) {
 $api_key = trim($config->get('latipay2_api_key'));
 $user_id = trim($config->get('latipay2_user_id'));
 $wallet_id = trim($config->get('latipay2_wallet_id'));
-
 $order_status_id = $config->get('latipay2_order_status_id');
-$order_id = $_GET['merchant_reference'];
-$sql = $db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . $order_id . "' LIMIT 1 ");
-if ($sql->num_rows) {
-    $order_info = $sql->row;
-} else {
-    die('No Order ID');
-}
 
 $payment_method = $_GET['payment_method'];
 $status = $_GET['status'];
 $currency = $_GET['currency'];
 $amount = $_GET['amount'];
+$order_id = $_GET['merchant_reference'];
 
 $signature_string = $order_id . $payment_method . $status . $currency . $amount;
 $signature = hash_hmac('sha256', $signature_string, $api_key);
 if ($signature == $_GET['signature']) {
+
+    $sql = $db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . $order_id . "' LIMIT 1 ");
+    if (!$sql->num_rows) {
+        die('No Order ID');
+    }
+
     if ($status == "paid") {
         $db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . $order_status_id . "' WHERE order_id = '" . $order_id . "' ");
 
