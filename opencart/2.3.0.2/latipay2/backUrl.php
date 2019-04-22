@@ -6,6 +6,9 @@
  *          参数同前台通知，有返回值
  * 详细说明见API文档 https://merchant.latipay.co.nz/developer/api.action
  */
+
+error_reporting(0);
+
 require_once('../config.php');
 
 // Startup
@@ -37,23 +40,22 @@ $user_id = trim($config->get('latipay2_user_id'));
 $wallet_id = trim($config->get('latipay2_wallet_id'));
 $order_status_id = $config->get('latipay2_order_status_id');
 
-$order_id = $_POST['merchant_reference'];
-$sql = $db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . $order_id . "' LIMIT 1 ");
-if ($sql->num_rows) {
-    $order_info = $sql->row;
-} else {
-    die('No Order ID');
-}
-
 $payment_method = $_POST['payment_method'];
 $status = $_POST['status'];
 $currency = $_POST['currency'];
 $amount = $_POST['amount'];
+$order_id = $_POST['merchant_reference'];
 
 $signature_string = $order_id . $payment_method . $status . $currency . $amount;
 $signature = hash_hmac('sha256', $signature_string, $api_key);
 
 if ($signature == $_POST['signature']) {
+
+    $sql = $db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . $order_id . "' LIMIT 1 ");
+    if (!$sql->num_rows) {
+        die('No Order ID');
+    }
+
     if ($status == "paid") {
         $db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . $order_status_id . "' WHERE order_id = '" . $order_id . "' ");
 

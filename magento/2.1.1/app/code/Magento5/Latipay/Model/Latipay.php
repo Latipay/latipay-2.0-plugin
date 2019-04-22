@@ -288,6 +288,9 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
             if (!$v) {
                 continue;
             }
+            if (strtolower($v) == 'latipay') {
+                continue;
+            }
 
             $checked = '';
             if ($k == 0) {

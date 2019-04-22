@@ -117,6 +117,12 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
             $wallet = 'Wechat,Alipay';
         }
         $wallet = explode(',', $wallet);
+        foreach ($wallet as $key => $value) {
+            if (strtolower($value) == 'latipay') {
+                unset($wallet[$key]);
+            }
+        }
+        $wallet = array_values($wallet);
 
         return $wallet;
     }
