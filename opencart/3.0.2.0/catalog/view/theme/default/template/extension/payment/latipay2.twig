@@ -21,7 +21,7 @@
 $('#button-confirm').on('click', function() {
     var payment_method2 = $('input[name="payment_method2"]:checked').val();
     if (payment_method2 == null || payment_method2 == undefined) {
-        alert('Please select the payment method !');
+        alert('{{ text_payment_method_alert }}');
         return;
     }
 	$.ajax({
