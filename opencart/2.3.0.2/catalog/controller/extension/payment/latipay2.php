@@ -11,6 +11,7 @@ class ControllerExtensionPaymentLatipay2 extends Controller
     {
         $this->language->load('extension/payment/latipay2');
         $data['text_payment_method'] = $this->language->get('text_payment_method');
+        $data['text_payment_method_alert'] = $this->language->get('text_payment_method_alert');
         $data['text_alipay'] = $this->language->get('text_alipay');
         $data['text_wechat'] = $this->language->get('text_wechat');
         $data['text_onlineBank'] = $this->language->get('text_onlineBank');
@@ -68,15 +69,22 @@ class ControllerExtensionPaymentLatipay2 extends Controller
             $wallet = 'Wechat,Alipay';
         }
 
+        $paymentMethodNames = [
+            'alipay' => $this->language->get('text_alipay'),
+            'wechat' => $this->language->get('text_wechat'),
+        ];
+
+        $NotRequiredPaymentMethod = ['latipay', 'onlinebank', 'polipay'];
+
         $walletList = explode(',', $wallet);
         $select_array = array();
         foreach ($walletList as $key => $value) {
-            if (strtolower($value) == 'latipay') {
+            if (in_array(strtolower($value), $NotRequiredPaymentMethod)) {
                 continue;
             }
 
             $select_array[] = array(
-                'name' => $value,
+                'name' => $name = isset($paymentMethodNames[strtolower($value)]) ? $paymentMethodNames[strtolower($value)] : $value,
                 'value' => strtolower($value),
             );
         }
