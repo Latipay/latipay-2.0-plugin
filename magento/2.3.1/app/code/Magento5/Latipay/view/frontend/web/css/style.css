@@ -1,0 +1,24 @@
+.payment-method-title .label .latipay-title:after {
+    content: "";
+    width: 82px;
+    height: 41px;
+    background: url(../images/logo.svg) no-repeat;
+    display: table-cell;
+    vertical-align: middle;
+    background-position: 10px 0;
+}
+.payment-method-content #latipay-icon{
+    width: 223px;
+    height: 47px;
+}
+.payment-method-content #latipay-icon:before {
+    content: "";
+    width: 223px;
+    height: 47px;
+    background: url(../images/icon.png) no-repeat;
+    display: inline-block;
+}
+
+li.latipay-options-item {
+    list-style: none;
+}

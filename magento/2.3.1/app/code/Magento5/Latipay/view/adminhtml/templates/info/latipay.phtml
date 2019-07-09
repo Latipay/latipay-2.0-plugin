@@ -1,0 +1,12 @@
+<?php
+/**
+ * @var $block \Magento5\Latipay\Block\Info\Latipay
+ */
+?>
+<div class="order-payment-method-name"><?php echo $block->escapeHtml($block->getMethod()->getTitle()); ?></div>
+<table class="data-table admin__table-secondary">
+    <tr>
+        <th><?php echo $block->escapeHtml(__('Method')); ?></th>
+        <td><?php echo $block->escapeHtml($block->getInfo()->getAdditionalInformation('latipay_method')); ?></td>
+    </tr>
+</table>
