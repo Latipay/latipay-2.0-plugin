@@ -215,9 +215,19 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         $order = $this->checkoutSession->getLastOrder();
         $apiKey = $this->getConfigData('api_key');
 
+        $currency = trim(strtoupper($this->storeManager->getStore()->getBaseCurrencyCode()));
+        $wallet_id = '';
+        if ($currency == 'NZD') {
+            $wallet_id = trim($this->getConfigData('nzd_wallet_id'));
+        } else if ($currency == 'AUD') {
+            $wallet_id = trim($this->getConfigData('aud_wallet_id'));
+        } else if ($currency == 'CNY') {
+            $wallet_id = trim($this->getConfigData('cny_wallet_id'));
+        }
+
         $data = array();
         $data['user_id'] = $this->getConfigData('user_id');
-        $data['wallet_id'] = $this->getConfigData('wallet_id');
+        $data['wallet_id'] = $wallet_id;
         $data['amount'] = $order->getBaseGrandTotal();
         $data['payment_method'] = $order->getPayment()->getAdditionalInformation('latipay_method') ? $order->getPayment()->getAdditionalInformation('latipay_method') : 'wechat';
         $data['return_url'] = $this->getReturnUrl();
@@ -230,7 +240,7 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
 
         $data['signature'] = hash_hmac('sha256', $sign, $apiKey);
         $data['merchant_reference'] = $order->getIncrementId();
-        $data['currency'] = $this->storeManager->getStore()->getBaseCurrencyCode();
+        $data['currency'] = $currency;
         $data['ip'] = $order->getRemoteIp();
         $data['version'] = "2.0";
         $data['product_name'] = $this->storeManager->getStore()->getFrontendName() . ' Order #' . $order->getIncrementId();
@@ -254,7 +264,19 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
     public function getWalletData()
     {
         $data['user_id'] = $this->getConfigData('user_id');
-        $data['wallet_id'] = $this->getConfigData('wallet_id');
+
+        $currency = trim(strtoupper($this->storeManager->getStore()->getBaseCurrencyCode()));
+        $wallet_id = '';
+        if ($currency == 'NZD') {
+            $wallet_id = trim($this->getConfigData('nzd_wallet_id'));
+        } else if ($currency == 'AUD') {
+            $wallet_id = trim($this->getConfigData('aud_wallet_id'));
+        } else if ($currency == 'CNY') {
+            $wallet_id = trim($this->getConfigData('cny_wallet_id'));
+        }
+
+        $data['wallet_id'] = $wallet_id;
+
         if (!empty($data['wallet_id']) && !empty($data['user_id'])) {
             $requestWalletUrl = 'https://api.latipay.net/v2/detail/' . $data['wallet_id'] . '?user_id=' . $data['user_id'];
             $ch = curl_init();
@@ -282,13 +304,15 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
         }
         $wallet = explode(',', $wallet);
 
+        $NotRequiredPaymentMethod = ['latipay', 'onlinebank', 'polipay'];
         $return = '';
         foreach ($wallet as $k => $v) {
 
             if (!$v) {
                 continue;
             }
-            if (strtolower($v) == 'latipay') {
+
+            if (in_array(strtolower($v), $NotRequiredPaymentMethod)) {
                 continue;
             }
 

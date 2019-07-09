@@ -15,7 +15,9 @@
                 <return_url>latipay/standard/response</return_url>
                 <callback_url>latipay/standard/callback</callback_url>
                 <about_url>https://www.latipay.net</about_url>
-                <wallet_id backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <nzd_wallet_id></nzd_wallet_id>
+                <aud_wallet_id></aud_wallet_id>
+                <cny_wallet_id></cny_wallet_id>
                 <user_id backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <is_spotpay>0</is_spotpay>
