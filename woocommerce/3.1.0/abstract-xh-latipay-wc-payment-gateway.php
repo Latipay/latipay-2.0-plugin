@@ -103,7 +103,7 @@ abstract class Abstract_XH_Latipay_Payment_Gateway extends WC_Payment_Gateway
             );
         }
 
-        $total_amount = round($order->get_total(), 2);
+        $total_amount = sprintf("%.2f",round($order->get_total(),2));
         $gateway = "https://api.latipay.net/v2";
         $url_return = $this->get_return_url($order);
         $url_notify = $this->get_return_url($order);
@@ -192,7 +192,7 @@ abstract class Abstract_XH_Latipay_Payment_Gateway extends WC_Payment_Gateway
             }
         }
 
-        $title = mb_strimwidth($title, 0, $limit);
+        $title = mb_strimwidth($title, 0, $limit, '', 'utf-8');
         return apply_filters('xh-payment-get-order-title', $title, $order);
     }
 }
