@@ -1,0 +1,27 @@
+<?php
+/**
+ * @var $block \Magento5\Latipay\Block\Form\Latipay
+ */
+$methodCode = $block->escapeHtml($block->getMethodCode());
+?>
+<fieldset class="fieldset items <?php /* @noEscape */ echo $methodCode ?>" id="payment_form_<?php /* @noEscape */ echo $methodCode ?>" style="display: none">
+    <div class="field number required">
+        <label for="latipay_method" class="label"><span><?php echo $block->escapeHtml(__('Method')) ?></span></label>
+        <div class="control">
+            <ul class="latipay-options">
+                <li class="latipay-options-item">
+                    <input name="payment[latipay_method]" id="latipay-method-wechat" type="radio" value="wechat" checked="checked">
+                    <label for="latipay-method-wechat">Wechat</label>
+                </li>
+                <li class="latipay-options-item">
+                    <input name="payment[latipay_method]" id="latipay-method-alipay" type="radio" value="alipay">
+                    <label for="latipay-method-alipay">Alipay</label>
+                </li>
+                <li class="latipay-options-item">
+                    <input name="payment[latipay_method]" id="latipay-method-bank" type="radio" value="onlineBank">
+                    <label for="latipay-method-bank">Online Bank</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+</fieldset>

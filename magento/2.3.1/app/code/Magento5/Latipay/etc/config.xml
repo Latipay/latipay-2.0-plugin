@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <latipay>
+                <model>Magento5\Latipay\Model\Latipay</model>
+                <title>Latipay</title>
+                <service_provider>latipay_paisa</service_provider>
+                <production_url>https://api.latipay.net/v2/transaction</production_url>
+                <sandbox_url>https://api-staging.latipay.net/v2/transaction</sandbox_url>
+                <environment>sandbox</environment>
+                <redirect_url>latipay/standard/redirect</redirect_url>
+                <return_url>latipay/standard/response</return_url>
+                <callback_url>latipay/standard/callback</callback_url>
+                <about_url>https://www.latipay.net</about_url>
+                <nzd_wallet_id></nzd_wallet_id>
+                <aud_wallet_id></aud_wallet_id>
+                <cny_wallet_id></cny_wallet_id>
+                <user_id backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <is_spotpay>0</is_spotpay>
+                <is_debug>0</is_debug>
+            </latipay>
+        </payment>
+    </default>
+</config>

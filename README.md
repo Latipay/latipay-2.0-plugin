@@ -2,6 +2,7 @@
 
 ### Magento
 * Download
+	* [Magento 2.3.1.zip](https://github.com/Latipay/latipay-2.0-plugin/raw/master/target/magento-2.3.1.zip?1)
 	* [Magento 2.1.1.zip](https://github.com/Latipay/latipay-2.0-plugin/raw/master/target/magento-2.1.1.zip?1)
 	* [Magento 1.9.2.4.zip](https://github.com/Latipay/latipay-2.0-plugin/raw/master/target/magento-1.9.2.4.zip?1)
 
