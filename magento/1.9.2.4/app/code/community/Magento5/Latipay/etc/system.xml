@@ -42,15 +42,30 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>3</sort_order>
                         </transaction_url>
-                        <wallet_id translate="label">
-                            <label>Wallet ID</label>
+                        <nzd_wallet_id translate="label">
+                            <label>NZD WALLET ID</label>
                             <frontend_type>text</frontend_type>
-                            <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>4</sort_order>
-                        </wallet_id>
+                        </nzd_wallet_id>
+                        <aud_wallet_id translate="label">
+                            <label>AUD WALLET ID</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>5</sort_order>
+                        </aud_wallet_id>
+                        <cny_wallet_id translate="label">
+                            <label>CNY WALLET ID</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>6</sort_order>
+                        </cny_wallet_id>
                         <user_id translate="label">
                             <label>User ID</label>
                             <frontend_type>text</frontend_type>
@@ -58,7 +73,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>5</sort_order>
+                            <sort_order>7</sort_order>
                         </user_id>
                         <api_key translate="label">
                             <label>API Key</label>
@@ -67,7 +82,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>6</sort_order>
+                            <sort_order>8</sort_order>
                         </api_key>
                         <order_status translate="label">
                             <label>New order status</label>
@@ -76,7 +91,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>7</sort_order>
+                            <sort_order>9</sort_order>
                         </order_status>
                         <allowspecific translate="label">
                             <label>Payment from applicable countries</label>
@@ -85,7 +100,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>8</sort_order>
+                            <sort_order>10</sort_order>
                         </allowspecific>
                         <specificcountry translate="label">
                             <label>Payment from Specific countries</label>
@@ -94,7 +109,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>9</sort_order>
+                            <sort_order>11</sort_order>
                         </specificcountry>
                         <is_spotpay translate="label">
                             <label>is_spotpay</label>
@@ -106,7 +121,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>10</sort_order>
+                            <sort_order>12</sort_order>
                         </is_spotpay>
                         <is_debug translate="label">
                             <label>is_debug</label>
@@ -117,7 +132,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>11</sort_order>
+                            <sort_order>13</sort_order>
                         </is_debug>
                     </fields>
                 </latipay>

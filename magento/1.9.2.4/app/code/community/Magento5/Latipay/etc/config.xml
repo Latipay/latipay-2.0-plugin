@@ -48,7 +48,9 @@
                 <title>Latipay</title>
                 <transaction_url><![CDATA[https://api.latipay.net/v2/transaction]]></transaction_url>
                 <model>latipay/paymentmethod</model>
-                <wallet_id>W00000001</wallet_id>
+                <nzd_wallet_id>W00000001</nzd_wallet_id>
+                <aud_wallet_id>W00000002</aud_wallet_id>
+                <cny_wallet_id>W00000003</cny_wallet_id>
                 <user_id>U00001534</user_id>
                 <api_key>12345678</api_key>
                 <order_status>pending</order_status>
