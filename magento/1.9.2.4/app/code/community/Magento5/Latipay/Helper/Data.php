@@ -53,9 +53,19 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
         $order->loadByIncrementId($orderId);
         $apiKey = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/api_key'));
 
+        $currency = trim(strtoupper(Mage::app()->getStore()->getBaseCurrencyCode()));
+        $wallet_id = '';
+        if ($currency == 'NZD') {
+            $wallet_id = trim(Mage::getStoreConfig('payment/latipay/nzd_wallet_id'));
+        } else if ($currency == 'AUD') {
+            $wallet_id = trim(Mage::getStoreConfig('payment/latipay/aud_wallet_id'));
+        } else if ($currency == 'CNY') {
+            $wallet_id = trim(Mage::getStoreConfig('payment/latipay/cny_wallet_id'));
+        }
+
         $data = array();
         $data['user_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/user_id'));
-        $data['wallet_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/wallet_id'));
+        $data['wallet_id'] = $wallet_id;
         $data['amount'] = $order->getBaseGrandTotal();
         $data['payment_method'] = $order->getPayment()->getLatipayMethod() ? $order->getPayment()->getLatipayMethod() : 'wechat';
         $data['return_url'] = Mage::getUrl('latipay/payment/return', array('_secure' => true));
@@ -68,7 +78,7 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
 
         $data['signature'] = hash_hmac('sha256', $sign, $apiKey);
         $data['merchant_reference'] = $orderId;
-        $data['currency'] = Mage::app()->getStore()->getBaseCurrencyCode();
+        $data['currency'] = $currency;
         $data['ip'] = $order->getRemoteIp();
         $data['version'] = "2.0";
         $data['product_name'] = Mage::app()->getStore()->getFrontendName() . ' Order #' . $orderId;
@@ -90,7 +100,19 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function getWalletData()
     {
-        $data['wallet_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/wallet_id'));
+        $data = array();
+
+        $currency = trim(strtoupper(Mage::app()->getStore()->getBaseCurrencyCode()));
+        $wallet_id = '';
+        if ($currency == 'NZD') {
+            $wallet_id = trim(Mage::getStoreConfig('payment/latipay/nzd_wallet_id'));
+        } else if ($currency == 'AUD') {
+            $wallet_id = trim(Mage::getStoreConfig('payment/latipay/aud_wallet_id'));
+        } else if ($currency == 'CNY') {
+            $wallet_id = trim(Mage::getStoreConfig('payment/latipay/cny_wallet_id'));
+        }
+
+        $data['wallet_id'] = $wallet_id;
         $data['user_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/user_id'));
         if (!empty($data['wallet_id']) && !empty($data['user_id'])) {
             $requestWalletUrl = 'https://api.latipay.net/v2/detail/' . $data['wallet_id'] . '?user_id=' . $data['user_id'];
@@ -117,8 +139,10 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
             $wallet = 'Wechat,Alipay';
         }
         $wallet = explode(',', $wallet);
+
+        $NotRequiredPaymentMethod = ['latipay', 'onlinebank', 'polipay'];
         foreach ($wallet as $key => $value) {
-            if (strtolower($value) == 'latipay') {
+            if (in_array(strtolower($value), $NotRequiredPaymentMethod)) {
                 unset($wallet[$key]);
             }
         }
