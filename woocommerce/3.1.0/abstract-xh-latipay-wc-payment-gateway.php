@@ -19,7 +19,7 @@ abstract class Abstract_XH_Latipay_Payment_Gateway extends WC_Payment_Gateway
 
         add_filter('woocommerce_payment_gateways', array($this, 'woocommerce_add_gateway'), 10, 1);
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
-        add_action('woocommerce_update_options_payment_gateways', array($this, 'process_admin_options'));
+        //add_action('woocommerce_update_options_payment_gateways', array($this, 'process_admin_options'));
     }
 
     /**
