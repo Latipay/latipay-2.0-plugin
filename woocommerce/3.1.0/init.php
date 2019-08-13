@@ -234,10 +234,21 @@ add_action('init', function () {
         return;
     }
 
-    $order = new WC_Order($orderId);
+    $order = wc_get_order($orderId);
     if ($status == "paid") {
-        $order->payment_complete(isset($post_data['transaction_id']) ? $post_data['transaction_id'] : null);
+
+        $latipayOrderId =  isset($post_data['order_id']) ? $post_data['order_id'] : '';
+        $order->payment_complete($latipayOrderId);
         if (isset($_POST['merchant_reference']) && isset($_POST['status'])) {
+
+            //add order note
+            $order->add_order_note(__(XH_LATIPAY . ' payment complete. order_id: ' . $latipayOrderId, XH_LATIPAY));
+
+            //send email
+            $mailer = WC()->mailer();
+            $mailer->emails['WC_Email_New_Order']->trigger($orderId);
+            $mailer->emails['WC_Email_Customer_Processing_Order']->trigger($orderId);
+
             die('sent');
         }
     }
