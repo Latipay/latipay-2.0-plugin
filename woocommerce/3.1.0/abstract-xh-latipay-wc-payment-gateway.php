@@ -117,50 +117,50 @@ abstract class Abstract_XH_Latipay_Payment_Gateway extends WC_Payment_Gateway
         $user_id = isset($options['user_id']) ? $options['user_id'] : null;
         $api_key = isset($options['api_key']) ? $options['api_key'] : null;
         $wallet_id = isset($options["wallet_id_" . strtolower($currency)]) ? $options["wallet_id_" . strtolower($currency)] : null;
-        $payment_method = $this->get_payment_method();
-
-        $_prehash = $user_id . $wallet_id . $total_amount . $payment_method . $url_return . $url_notify;
-        $signature = hash_hmac('sha256', $_prehash, $api_key);
+        $payment_method = strtolower($this->get_payment_method());
 
         require_once 'includes/lib/Latipay.php';
         require_once 'includes/lib/IP.php';
         $latipay = new Latipay($gateway);
 
         $post_data = array(
+            'user_id' => $user_id,
             'wallet_id' => $wallet_id,
             'amount' => $total_amount,
-            'currency' => $currency,
-            'user_id' => $user_id,
-            'merchant_reference' => $order_id,
+            'payment_method' => $payment_method,
             'return_url' => $url_return,
             'callback_url' => $url_notify,
-            'ip' => IP::clientIP(),
-            'version' => '2.0',
-            'product_name' => $this->get_order_title($order),
-            'payment_method' => $payment_method,
-            'present_qr' => '1',
-            'signature' => $signature,
             'backPage_url' => $order->get_cancel_order_url(),
+            'merchant_reference' => $order_id . '_' . uniqid(),
+            'ip' => IP::clientIP(),
+            'product_name' => $this->get_order_title($order),
+            'version' => '2.0',
+            'present_qr' => '1',
         );
 
-        if ($payment_method == 'alipay') {
-            $is_spotpay = isset($options['is_spotpay']) ? $options['is_spotpay'] : null;
-            if ($is_spotpay && $is_spotpay == 1) {
-                $post_data['is_spotpay'] = 1;
-            }
+        ksort($post_data);
+        $item = array();
+        foreach ($post_data as $key => $value) {
+            $item[] = $key . "=" . $value;
         }
+        $_prehash =  join("&", $item);
+
+        $signature = hash_hmac('sha256', $_prehash . $api_key, $api_key);
+        $post_data['signature'] = $signature;
 
         if (isset($options['IS_DEBUG']) && $options['IS_DEBUG'] == 1) {
             $logFile = dirname(__FILE__) . '/latipay-debug.log';
-            $logStr = date('Y-m-d H:i:s') . ': ' . json_encode($post_data) . PHP_EOL;
+            $logStr = date('Y-m-d H:i:s') . ' process_payment : ' . json_encode($post_data) . PHP_EOL;
             file_put_contents($logFile, $logStr, FILE_APPEND);
         }
 
         try {
+
             $payment = $latipay->createPayment($post_data);
             if (isset($payment['code']) && $payment['code'] != '0') {
                 throw new Exception($payment['message']);
             }
+
             $response_signature = hash_hmac('sha256', $payment['nonce'] . $payment['host_url'], $api_key);
             if ($response_signature == $payment['signature']) {
                 return array(
