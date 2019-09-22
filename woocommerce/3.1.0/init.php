@@ -4,7 +4,7 @@
  * Plugin URI: https://www.latipay.net/
  * Description: 
  * Author: latipay
- * Version: 2.0.1
+ * Version: 2.0.2
  * Author URI:  https://www.latipay.net/
  */
 
@@ -188,14 +188,9 @@ add_action('init', function () {
                     new XHLatipayWechatForWC();
                     break;
 
-                case 'payease':
-                    require_once 'class-latipay-payease-wc-payment-gateway.php';
-                    new XHLatipayPayeaseForWC();
-                    break;
-
-                case 'onlinebank':
-                    require_once 'class-latipay-payease-wc-payment-gateway.php';
-                    new XHLatipayPayeaseForWC();
+                case 'moneymore':
+                    require_once 'class-latipay-moneymore-wc-payment-gateway.php';
+                    new XHLatipayMoneymoreForWC();
                     break;
             }
         }
@@ -217,27 +212,28 @@ add_action('init', function () {
 
     if (isset($options['IS_DEBUG']) && $options['IS_DEBUG'] == 1) {
         $logFile = dirname(__FILE__) . '/latipay-debug.log';
-        $logStr = date('Y-m-d H:i:s') . ': ' . json_encode($post_data) . PHP_EOL;
+        $logStr = date('Y-m-d H:i:s') . ' payment_complete : ' . json_encode($post_data) . PHP_EOL;
         file_put_contents($logFile, $logStr, FILE_APPEND);
     }
 
     $api_key = isset($options['api_key']) ? $options['api_key'] : null;
-    $orderId = $post_data['merchant_reference'];
+    $merchantOrderId = $post_data['merchant_reference'];
     $payment_method = $post_data['payment_method'];
     $status = $post_data['status'];
     $currency = $post_data['currency'];
     $amount = $post_data['amount'];
 
-    $signature_string = $orderId . $payment_method . $status . $currency . $amount;
+    $signature_string = $merchantOrderId . $payment_method . $status . $currency . $amount;
     $signature = hash_hmac('sha256', $signature_string, $api_key);
     if ($signature != $post_data['signature']) {
         return;
     }
 
+    $orderId = substr($merchantOrderId, 0, strripos($merchantOrderId, '_'));
     $order = wc_get_order($orderId);
     if ($status == "paid") {
 
-        $latipayOrderId =  isset($post_data['order_id']) ? $post_data['order_id'] : '';
+        $latipayOrderId =  isset($post_data['order_id']) ? $post_data['order_id'] : null;
         $order->payment_complete($latipayOrderId);
         if (isset($_POST['merchant_reference']) && isset($_POST['status'])) {
 

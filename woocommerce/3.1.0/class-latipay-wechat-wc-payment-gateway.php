@@ -14,7 +14,7 @@ class XHLatipayWechatForWC extends Abstract_XH_LATIPAY_Payment_Gateway
 
     public function get_payment_method()
     {
-        return 'wechat';
+        return 'Wechat';
     }
 }
 
