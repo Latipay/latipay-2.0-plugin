@@ -54,12 +54,13 @@ $payment_method = $_GET['payment_method'];
 $status = $_GET['status'];
 $currency = $_GET['currency'];
 $amount = $_GET['amount'];
-$order_id = $_GET['merchant_reference'];
+$merchant_order_id = $_GET['merchant_reference'];
 
-$signature_string = $order_id . $payment_method . $status . $currency . $amount;
+$signature_string = $merchant_order_id . $payment_method . $status . $currency . $amount;
 $signature = hash_hmac('sha256', $signature_string, $api_key);
 if ($signature == $_GET['signature']) {
 
+    $order_id = substr($merchant_order_id, 0, strripos($merchant_order_id, '_'));
     $sql = $db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . $order_id . "' LIMIT 1 ");
     if (!$sql->num_rows) {
         die('No Order ID');
@@ -72,7 +73,8 @@ if ($signature == $_GET['signature']) {
         $url = HTTP_SERVER . "index.php?route=extension/payment/latipay2/callback";
         $post_data = array(
             "order_id" => $order_id,
-            "order_status_id" => $order_status_id
+            "order_status_id" => $order_status_id,
+            "latipay_order_id" => isset($_GET['order_id']) ? $_GET['order_id'] : '',
         );
 
         $ch = curl_init();
