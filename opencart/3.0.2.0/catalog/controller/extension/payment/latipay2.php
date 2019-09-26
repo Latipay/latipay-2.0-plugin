@@ -15,7 +15,7 @@ class ControllerExtensionPaymentLatipay2 extends Controller
 
         $data['text_alipay'] = $this->language->get('text_alipay');
         $data['text_wechat'] = $this->language->get('text_wechat');
-        $data['text_onlineBank'] = $this->language->get('text_onlineBank');
+        $data['text_moneymore'] = $this->language->get('text_moneymore');
 
         $data['button_confirm'] = $this->language->get('button_confirm');
         $data['text_loading'] = $this->language->get('text_loading');
@@ -76,6 +76,7 @@ class ControllerExtensionPaymentLatipay2 extends Controller
         $paymentMethodNames = [
             'alipay' => $this->language->get('text_alipay'),
             'wechat' => $this->language->get('text_wechat'),
+            'moneymore' => $this->language->get('text_moneymore'),
         ];
 
         $NotRequiredPaymentMethod = ['latipay', 'onlinebank', 'polipay'];
@@ -132,26 +133,31 @@ class ControllerExtensionPaymentLatipay2 extends Controller
 
         $total = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);//订单总金额
 
-        $_prehash = $user_id . $wallet_id . $total . $payment_method . $url_return . $url_notify;
-        $signature = hash_hmac('sha256', $_prehash, $api_key);
-
-        $latipay = new Latipay($gateway);
         $post_data = array(
+            'user_id' => $user_id,
             'wallet_id' => $wallet_id,
             'amount' => $total,
-            'currency' => $order_info['currency_code'],
-            'user_id' => $user_id,
-            'merchant_reference' => $order_id,
+            'payment_method' => $payment_method,
             'return_url' => $url_return,
             'callback_url' => $url_notify,
+            'backPage_url' => HTTP_SERVER . "index.php?route=checkout/checkout",
+            'merchant_reference' => $order_id . '_' . uniqid(),
             'ip' => IP::clientIP(),
-            'version' => '2.0',
             'product_name' => 'Order #' . $order_id,
-            'payment_method' => $payment_method, // wechat, alipay, onlineBank
-            'present_qr' => '1', // wechat
-            'signature' => $signature,
+            'version' => '2.0',
+            'present_qr' => '1',
         );
 
+        ksort($post_data);
+        $item = array();
+        foreach ($post_data as $key => $value) {
+            $item[] = $key . "=" . $value;
+        }
+        $_prehash =  join("&", $item);
+        $signature = hash_hmac('sha256', $_prehash . $api_key, $api_key);
+        $post_data['signature'] = $signature;
+
+        $latipay = new Latipay($gateway);
         try {
             $payment = $latipay->createPayment($post_data);
             if ($payment['host_url'] != '') {
@@ -175,16 +181,21 @@ class ControllerExtensionPaymentLatipay2 extends Controller
     //send email
     public function callback()
     {
+        if (!isset($this->request->post['order_id']) || !isset($this->request->post['order_status_id'])) {
+            return false;
+        }
+
         $this->load->model('checkout/order_latipay2');
         $order_id = $this->request->post['order_id'];
         $order_status_id = $this->request->post['order_status_id'];
+        $latipay_order_id = $this->request->post['latipay_order_id'];
 
         $sql = $this->db->query("SELECT if_email_latipay2 FROM " . DB_PREFIX . "order WHERE order_id = '" . $order_id . "' LIMIT 1 ");
         if ($sql->num_rows) {
             if ($sql->row['if_email_latipay2'] == '0') {
 
                 $this->db->query("UPDATE " . DB_PREFIX . "order SET if_email_latipay2 = '1' WHERE order_id = '" . $order_id . "' ");
-                $this->model_checkout_order_latipay2->addOrderHistory($order_id, $order_status_id, '', 1);
+                $this->model_checkout_order_latipay2->addOrderHistory($order_id, $order_status_id, 'Latipay payment complete. order_id:' . $latipay_order_id, 1);
 
             }
         }
