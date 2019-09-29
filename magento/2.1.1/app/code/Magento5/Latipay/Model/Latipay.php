@@ -225,38 +225,32 @@ class Latipay extends \Magento\Payment\Model\Method\AbstractMethod
             $wallet_id = trim($this->getConfigData('cny_wallet_id'));
         }
 
-        $data = array();
-        $data['user_id'] = $this->getConfigData('user_id');
-        $data['wallet_id'] = $wallet_id;
-        $data['amount'] = $order->getBaseGrandTotal();
-        $data['payment_method'] = $order->getPayment()->getAdditionalInformation('latipay_method') ? $order->getPayment()->getAdditionalInformation('latipay_method') : 'wechat';
-        $data['return_url'] = $this->getReturnUrl();
-        $data['callback_url'] = $this->getCallbackUrl();
+        $data = array(
+            'user_id' => $this->getConfigData('user_id'),
+            'wallet_id' => $wallet_id,
+            'amount' => $order->getBaseGrandTotal(),
+            'payment_method' => $order->getPayment()->getAdditionalInformation('latipay_method') ? $order->getPayment()->getAdditionalInformation('latipay_method') : 'wechat',
+            'return_url' => $this->getReturnUrl(),
+            'callback_url' => $this->getCallbackUrl(),
+            'backPage_url' => $this->getRedirectUrl(),
+            'merchant_reference' => $order->getIncrementId() . '_' . uniqid(),
+            'ip' => $order->getRemoteIp(),
+            'product_name' => $this->storeManager->getStore()->getFrontendName() . ' Order #' . $order->getIncrementId(),
+            'version' => '2.0',
+        );
 
-        $sign = "";
-        foreach ($data as $key => $value) {
-            $sign .= $value;
-        }
-
-        $data['signature'] = hash_hmac('sha256', $sign, $apiKey);
-        $data['merchant_reference'] = $order->getIncrementId();
-        $data['currency'] = $currency;
-        $data['ip'] = $order->getRemoteIp();
-        $data['version'] = "2.0";
-        $data['product_name'] = $this->storeManager->getStore()->getFrontendName() . ' Order #' . $order->getIncrementId();
         if ($data['payment_method'] == "wechat") {
             $data['present_qr'] = 1;
         }
 
-        if ($data['payment_method'] == 'alipay') {
-            $is_spotpay = $this->getConfigData('is_spotpay');
-            if ($is_spotpay && $is_spotpay == 1) {
-                $data['is_spotpay'] = 1;
-                $data['present_qr'] = 1;
-            }
+        ksort($data);
+        $item = array();
+        foreach ($data as $key => $value) {
+            $item[] = $key . "=" . $value;
         }
-
-        $data['backPage_url'] = $this->getRedirectUrl();
+        $_prehash =  join("&", $item);
+        $signature = hash_hmac('sha256', $_prehash . $apiKey, $apiKey);
+        $data['signature'] = $signature;
 
         return $data;
     }

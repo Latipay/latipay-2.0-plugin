@@ -63,37 +63,32 @@ class Magento5_Latipay_Helper_Data extends Mage_Core_Helper_Abstract
             $wallet_id = trim(Mage::getStoreConfig('payment/latipay/cny_wallet_id'));
         }
 
-        $data = array();
-        $data['user_id'] = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/user_id'));
-        $data['wallet_id'] = $wallet_id;
-        $data['amount'] = $order->getBaseGrandTotal();
-        $data['payment_method'] = $order->getPayment()->getLatipayMethod() ? $order->getPayment()->getLatipayMethod() : 'wechat';
-        $data['return_url'] = Mage::getUrl('latipay/payment/return', array('_secure' => true));
-        $data['callback_url'] = Mage::getUrl('latipay/payment/callback', array('_secure' => true));
+        $data = array(
+            'user_id' => Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/user_id')),
+            'wallet_id' => $wallet_id,
+            'amount' => $order->getBaseGrandTotal(),
+            'payment_method' => $order->getPayment()->getLatipayMethod() ? $order->getPayment()->getLatipayMethod() : 'wechat',
+            'return_url' => Mage::getUrl('latipay/payment/return', array('_secure' => true)),
+            'callback_url' => Mage::getUrl('latipay/payment/callback', array('_secure' => true)),
+            'backPage_url' => Mage::getUrl('latipay/payment/cancel', array('_secure' => true)),
+            'merchant_reference' => $orderId . '_' . uniqid(),
+            'ip' => $order->getRemoteIp(),
+            'product_name' => Mage::app()->getStore()->getFrontendName() . ' Order #' . $orderId,
+            'version' => '2.0',
+        );
 
-        $sign = "";
-        foreach ($data as $key => $value) {
-            $sign .= $value;
-        }
-
-        $data['signature'] = hash_hmac('sha256', $sign, $apiKey);
-        $data['merchant_reference'] = $orderId;
-        $data['currency'] = $currency;
-        $data['ip'] = $order->getRemoteIp();
-        $data['version'] = "2.0";
-        $data['product_name'] = Mage::app()->getStore()->getFrontendName() . ' Order #' . $orderId;
         if ($data['payment_method'] == "wechat") {
             $data['present_qr'] = 1;
         }
 
-        if ($data['payment_method'] == 'alipay') {
-            $is_spotpay = Mage::helper('core')->decrypt(Mage::getStoreConfig('payment/latipay/is_spotpay'));
-            if ($is_spotpay && $is_spotpay == 1) {
-                $data['is_spotpay'] = 1;
-                $data['present_qr'] = 1;
-            }
+        ksort($data);
+        $item = array();
+        foreach ($data as $key => $value) {
+            $item[] = $key . "=" . $value;
         }
-        $data['backPage_url'] = Mage::getUrl('latipay/payment/cancel', array('_secure' => true));
+        $_prehash =  join("&", $item);
+        $signature = hash_hmac('sha256', $_prehash . $apiKey, $apiKey);
+        $data['signature'] = $signature;
 
         return $data;
     }
