@@ -14,7 +14,9 @@ class Callback extends \Magento5\Latipay\Controller\LatipayAbstract implements \
             $params = $this->getRequest()->getParams();
 
             if ($paymentMethod->validateResponse($params)) {
-                $order = $this->getOrderById($params['merchant_reference']);
+
+                $merchantOrderId = substr($params['merchant_reference'], 0, strripos($params['merchant_reference'], '_'));
+                $order = $this->getOrderById($merchantOrderId);
                 $payment = $order->getPayment();
 
                 $paymentMethod->postProcessing($order, $payment, $params);

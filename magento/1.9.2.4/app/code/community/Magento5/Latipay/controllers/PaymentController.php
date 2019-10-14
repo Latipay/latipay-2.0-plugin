@@ -60,7 +60,18 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
 
         if ($signature == $callbackSignature) {
             if ($status == "paid") {
-                $order = Mage::getModel('sales/order')->loadByIncrementId($merchantReference);
+                $merchantOrderId = substr($merchantReference, 0, strripos($merchantReference, '_'));
+                $order = Mage::getModel('sales/order')->loadByIncrementId($merchantOrderId);
+
+                if ($order->getStatus() == Mage_Sales_Model_Order::STATE_PROCESSING) {
+                    if ($type == 'return') {
+                        $this->_redirect('checkout/onepage/success', array('_secure' => false));
+                        return;
+                    } else {
+                        die('sent');
+                    }
+                }
+
                 $payment = $order->getPayment();
                 $payment->setTransactionId($transactionId);
 
@@ -76,7 +87,7 @@ class Magento5_Latipay_PaymentController extends Mage_Core_Controller_Front_Acti
                     $order->addStatusHistoryComment(Mage::helper('core')->__('Invoice #%s created', $invoice->getIncrementId()), false)->setIsCustomerNotified(false);
                 }
 
-                $order->addStatusHistoryComment(Mage::helper('core')->__('Payment successful'), false)->setIsCustomerNotified(false);
+                $order->addStatusHistoryComment(Mage::helper('core')->__('Payment successful. Latipay Response: ' . json_encode($postData)), false)->setIsCustomerNotified(false);
 
                 try {
                     $state = Mage_Sales_Model_Order::STATE_PROCESSING;
