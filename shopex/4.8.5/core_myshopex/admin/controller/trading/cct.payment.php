@@ -122,6 +122,23 @@ class cct_payment extends ctl_payment {
             'disable' => false,
             'count' => 1,
         );
+        $allApp[] = array(
+            'pay_id' => '99',
+            'pay_name' => 'LatiPay_MoneyMore',
+            'pay_ident' => 'pay_latipaymoneymore',
+            'version' => '1.0',
+            'pay_intro' => 'LatiPay_MoneyMore',
+            'pay_contents' => 'LatiPay_MoneyMore',
+            'pay_down_url' => 'http://sds.ecos.shopex.cn/payments/apps/pay_latipaymoneymore.tar',
+            'pay_type' => 'common',
+            'pay_logo' => 'http://sds.ecos.shopex.cn/payments/logos/pay_latipaymoneymore.gif',
+            'sort' => '10',
+            'hidden' => false,
+            'status' => true,
+            'set' => true,
+            'disable' => false,
+            'count' => 1,
+        );
         return $allApp;
     }
 
@@ -162,6 +179,29 @@ class cct_payment extends ctl_payment {
                 'pay_down_url' => 'http://sds.ecos.shopex.cn/payments/apps/pay_latipaywechat.tar',
                 'pay_type' => 'common',
                 'pay_logo' => 'http://sds.ecos.shopex.cn/payments/logos/pay_latipaywechat.gif',
+                'sort' => '10',
+                'hidden' => false,
+                'status' => true,
+                'disabled' => $row['disabled'],
+                'count' => 1,
+                'id' => $row['id'],
+                'custom_name' => $row['custom_name'],
+                'dis' => $row['disabled'],
+            );
+        }
+
+        $row = $oPay->db->selectrow("select * from sdb_payment_cfg where pay_type='latipaymoneymore'");
+        if($row){
+            $useApp[] = array(
+                'pay_id' => '99',
+                'pay_name' => 'LatiPay_MoneyMore',
+                'pay_ident' => 'pay_latipaymoneymore',
+                'version' => '1.0',
+                'pay_intro' => 'LatiPay_MoneyMore',
+                'pay_contents' => 'LatiPay_MoneyMore',
+                'pay_down_url' => 'http://sds.ecos.shopex.cn/payments/apps/pay_latipaymoneymore.tar',
+                'pay_type' => 'common',
+                'pay_logo' => 'http://sds.ecos.shopex.cn/payments/logos/pay_latipaymoneymore.gif',
                 'sort' => '10',
                 'hidden' => false,
                 'status' => true,
