@@ -11,8 +11,8 @@ if ($_POST['payment_method'] == 'wechat') {
 if ($_POST['payment_method'] == 'alipay') {
     $pay_code = 'latipayalipay';
 }
-if ($_POST['payment_method'] == 'onlineBank') {
-    $pay_code = 'latipayonlinebank';
+if ($_POST['payment_method'] == 'moneymore' || 'latipay') {
+    $pay_code = 'latipaymoneymore';
 }
 
 if (!$pay_code) {

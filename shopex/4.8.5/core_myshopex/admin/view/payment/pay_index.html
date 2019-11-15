@@ -22,7 +22,7 @@
                    <{foreach from=$usePay item=item key=key}>
                     <tr>
                         <td width="11%" >
-                            <{if $item.pay_ident=='pay_latipay' || $item.pay_ident=='pay_latipayalipay' || $item.pay_ident=='pay_latipaywechat' || $item.pay_ident=='pay_latipayonlinebank' || $item.pay_ident=='pay_latipayalipaycny' || $item.pay_ident=='pay_latipaywechatcny'}><img height="25" src="/plugins/app/<{$item.pay_ident}>/logo.gif" /><{else}><img height="25" src="http://esb.shopex.cn/payments/logos/<{$item.pay_ident}>.gif"><{/if}>
+                            <{if $item.pay_ident=='pay_latipay' || $item.pay_ident=='pay_latipayalipay' || $item.pay_ident=='pay_latipaywechat' || $item.pay_ident=='pay_latipayonlinebank' || $item.pay_ident=='pay_latipayalipaycny' || $item.pay_ident=='pay_latipaywechatcny' || $item.pay_ident=='pay_latipaymoneymore'}><img height="25" src="/plugins/app/<{$item.pay_ident}>/logo.gif" /><{else}><img height="25" src="http://esb.shopex.cn/payments/logos/<{$item.pay_ident}>.gif"><{/if}>
                         </td>
                         <td width="13%"><strong><{$item.pay_name}></strong></td>
                         <td width="55%"><{$item.pay_intro}></td>
@@ -62,7 +62,7 @@
                         <tr>
                             <{assign var="name" value=$item.pay_name|urlencode}>
                             <td width="15%">
-                                <{if $item.pay_ident=='pay_latipayalipay' || $item.pay_ident=='pay_latipaywechat' || $item.pay_ident=='pay_latipayonlinebank' || $item.pay_ident=='pay_latipayalipaycny' || $item.pay_ident=='pay_latipaywechatcny'}><img height="25" src="/plugins/app/<{$item.pay_ident}>/logo.gif" /><{else}><img height="25" src="http://esb.shopex.cn/payments/logos/<{$item.pay_ident}>.gif"><{/if}>
+                                <{if $item.pay_ident=='pay_latipayalipay' || $item.pay_ident=='pay_latipaywechat' || $item.pay_ident=='pay_latipayonlinebank' || $item.pay_ident=='pay_latipayalipaycny' || $item.pay_ident=='pay_latipaywechatcny' || $item.pay_ident=='pay_latipaymoneymore'}><img height="25" src="/plugins/app/<{$item.pay_ident}>/logo.gif" /><{else}><img height="25" src="http://esb.shopex.cn/payments/logos/<{$item.pay_ident}>.gif"><{/if}>
                             </td>
                             <td width="15%"><strong><{$item.pay_name}></strong></td>
                             <td width="55%"><{$item.pay_intro}></td>

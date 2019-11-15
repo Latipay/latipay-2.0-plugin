@@ -30,7 +30,7 @@ if (isset($set_modules) && $set_modules == TRUE) {
     $modules[$i]['is_online'] = '1';
 
     /* 作者 */
-    $modules[$i]['author'] = 'Max';
+    $modules[$i]['author'] = 'latipay support';
 
     /* 网址 */
     $modules[$i]['website'] = 'https://www.latipay.net/';
@@ -89,54 +89,39 @@ class latipaywechat
 
         $walletid = $payment['latipaywechat_walletid'];
         $merId = $payment['latipaywechat_mchid'];
-        //秘钥
         $ikey = $payment['latipaywechat_key'];
-        // apikey
-        $toSubmit['user_id'] = $merId;
-        //user_id
-        $toSubmit['wallet_id'] = $walletid;
-        //wallet_id
-        $toSubmit['amount'] = $order_latipay['order_amount'];
-        //订单总金额
-        $toSubmit['payment_method'] = 'wechat';
-        //payment_method
-        $toSubmit['return_url'] = $root . "latipayrespond.php";
-        //return_url
-        $toSubmit['callback_url'] = $root . "latipaycallback.php";
-        //callback_url
 
-        $sign = '';
-        foreach ($toSubmit as $key => $value) {
-            $sign .= $value;
+        $data = array(
+            'user_id' => $merId,
+            'wallet_id' => $walletid,
+            'amount' => $order_latipay['order_amount'],
+            'payment_method' => 'wechat',
+            'return_url' => $root . "latipayrespond.php",
+            'callback_url' => $root . "latipaycallback.php",
+            //'backPage_url' => '',
+            'merchant_reference' => date('Ymd') . '-' . $merId . '-' . ($order_latipay['order_sn']) . '_' . uniqid(),
+            'ip' => real_ip(),
+            'product_name' => $order_latipay['order_sn'],
+            'version' => '2.0',
+            'present_qr' => '1',
+        );
+
+        ksort($data);
+        $item = array();
+        foreach ($data as $key => $value) {
+            $item[] = $key . "=" . $value;
         }
-
-        $post_data =
-            array(
-                'signature' => hash_hmac('sha256', $sign, $ikey),
-                'wallet_id' => $walletid,
-                'amount' => $order_latipay['order_amount'],
-                'user_id' => $merId,
-                'merchant_reference' => date(Ymd) . '-' . $merId . '-' . ($order_latipay['order_sn']),
-                'currency' => 'CNY',
-                'return_url' => $root . "latipayrespond.php",
-                'callback_url' => $root . "latipaycallback.php",
-                'ip' => real_ip(),
-                'version' => '2.0',
-                'product_name' => $order_latipay['order_sn'],
-                'payment_method' => 'wechat',
-                'present_qr' => '1'
-            );
-
-        $arr = json_encode($post_data);
+        $_prehash =  join("&", $item);
+        $signature = hash_hmac('sha256', $_prehash . $ikey, $ikey);
+        $data['signature'] = $signature;
 
         $url = 'https://api.latipay.net/v2/transaction/';
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_POST, TRUE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $arr);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json"
         ));
@@ -168,7 +153,8 @@ class latipaywechat
 
         if ($signature == $_GET['signature']) {
             if ($status == "paid") {
-                $order_latipay_sn = explode('-', $order_latipayId);
+                $order_id = substr($order_latipayId, 0, strripos($order_latipayId, '_'));
+                $order_latipay_sn = explode('-', $order_id);
                 //循环订单分别确认付款
                 for ($i = 2; $i < count($order_latipay_sn); $i++) {
                     $order_sn = $order_latipay_sn[$i];
@@ -211,7 +197,8 @@ class latipaywechat
 
         if ($signature == $_POST['signature']) {
             if ($status == "paid") {
-                $order_latipay_sn = explode('-', $order_latipayId);
+                $order_id = substr($order_latipayId, 0, strripos($order_latipayId, '_'));
+                $order_latipay_sn = explode('-', $order_id);
                 //循环订单分别确认付款
                 for ($i = 2; $i < count($order_latipay_sn); $i++) {
                     $order_sn = $order_latipay_sn[$i];
