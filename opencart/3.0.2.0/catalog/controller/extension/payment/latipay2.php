@@ -131,7 +131,7 @@ class ControllerExtensionPaymentLatipay2 extends Controller
             return;
         }
 
-        $total = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);//订单总金额
+        $total = $this->currency->format($order_info['total'], $currency, '', false);//订单总金额
 
         $post_data = array(
             'user_id' => $user_id,
